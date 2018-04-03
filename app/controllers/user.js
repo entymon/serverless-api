@@ -1,6 +1,23 @@
 const express = require('express');
 const { getUserByUuid, createUser } = require('../models/user');
 
+//========== configuration
+const AWS = require('aws-sdk');
+const IS_OFFLINE = process.env.IS_OFFLINE;
+let dynamoDb;
+if (IS_OFFLINE === 'true') {
+  dynamoDb = new AWS.DynamoDB.DocumentClient({
+    region: 'localhost',
+    endpoint: 'http://localhost:8000'
+  });
+  console.log(dynamoDb);
+} else {
+  dynamoDb = new AWS.DynamoDB.DocumentClient();
+}
+
+const USERS_TABLE = process.env.USERS_TABLE;
+//============ configuration
+
 const router = express.Router();
 
 router.get('/', (req, res) => {
@@ -9,22 +26,27 @@ router.get('/', (req, res) => {
 
 router.get('/:uuid', (req, res) => {
 
-  const User = {
-    uuid: uuid
+  console.log(req.params.uuid, 'qweqwewqeqweWEWQQWQWE');
+  const params = {
+    TableName: USERS_TABLE,
+    Key: {
+      uuid: req.params.uuid
+    }
   };
 
-  getUserByUuid(User).then((error, result) => {
-    if (error) {
+  dynamoDb.get(params).promise()
+    .catch(error => {
       console.log(error);
       res.status(400).json({ error: 'Could not get user' });
-    }
-    if (result.Item) {
-      const { uuid, name } = result.Item;
-      res.json({ uuid, name });
-    } else {
-      res.status(404).json({ error: 'User not found' });
-    }
-  });
+    })
+    .then(result => {
+      if (result.Item) {
+        const { uuid, name } = result.Item;
+        res.json({ uuid, name });
+      } else {
+        res.status(404).json({ error: 'User not found' });
+      }
+    });
 });
 
 router.post('/', (req, res) => {
@@ -36,21 +58,21 @@ router.post('/', (req, res) => {
     res.status(400).json({ error: '"name" must be a string' });
   }
 
-  const User = {
-    uuid: uuid,
-    name: name
+  const params = {
+    TableName: USERS_TABLE,
+    Item: {
+      uuid: uuid,
+      name: name
+    }
   };
-  createUser(User)
-    .catch((error) => {
-      console.log(error, 'dynamoDB error');
-    })
-    .then((error) => {
-      if (error) {
-        console.log(error);
-        res.status(400).json({ error: 'Could not create user' });
-      }
-      res.json(User);
-    });
+
+  dynamoDb.put(params, (error) => {
+    if (error) {
+      console.log(error);
+      res.status(400).json({ error: 'Could not create user' });
+    }
+    res.json({ uuid, name });
+  });
 });
 
 module.exports = router;
