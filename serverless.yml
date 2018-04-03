@@ -5,21 +5,73 @@ provider:
   runtime: nodejs6.10
   stage: dev
   region: us-east-1
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource:
+        - { "Fn::GetAtt": ["UsersDynamoDBTable", "Arn" ] }
+  environment:
+    USERS_TABLE: ${self:custom.tableName}
+
 functions:
   app:
     handler: app/handler.app
     events:
       - http: ANY /
       - http: 'ANY {proxy+}'
+  getUser:
+    handler: app/handler.app
+    events:
+      - http: 'GET /users/{proxy+}'
+  createUser:
+    handler: app/handler.app
+    events:
+      - http: 'POST /users'
+
+resources:
+  Resources:
+    UsersDynamoDBTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: userId
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: userId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:custom.tableName}
+
 plugins:
   - serverless-offline
   - serverless-express
   - serverless-webpack
+  - serverless-dynamodb-local
+
 custom:
+
   serverless-offline:
     port: 4000
+
   webpack:
     webpackConfig: 'webpack.config.js'   # Name of webpack configuration file
     includeModules: false   # Node modules configuration for packaging
     packager: 'yarn'   # Packager that will be used to package your external modules
     packExternalModulesMaxBuffer: 200 * 1024   # Size of stdio buffers for spawned child processes
+
+  dynamodb:
+    start:
+      migrate: true
+
+  tableName: 'users-table-dev'
+
