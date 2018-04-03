@@ -2,21 +2,33 @@ require('dotenv').config();
 
 const express = require('serverless-express/express');
 const bodyParser = require('body-parser');
-const AWS = require('aws-sdk');
 const routes = require('./controllers/index');
-
-const dynamoDb = require('./services/dynamodb');
+const AWS = require('aws-sdk');
 
 const app = express();
-
 
 app.use(bodyParser.json({ strict: false }));
 
 app.use('/', routes);
 
+const IS_OFFLINE = process.env.IS_OFFLINE;
+
+let dynamoDb;
+if (IS_OFFLINE === 'true') {
+  dynamoDb = new AWS.DynamoDB.DocumentClient({
+    region: 'localhost',
+    endpoint: 'http://localhost:8000'
+  });
+  console.log(dynamoDb, 'dynamoDb');
+} else {
+  dynamoDb = new AWS.DynamoDB.DocumentClient();
+}
+
+const USERS_TABLE = process.env.USERS_TABLE;
+
 
 // Get User endpoint
-app.get('/users/:userId', function (req, res) {
+app.get('/test/:userId', function (req, res) {
   const params = {
     TableName: USERS_TABLE,
     Key: {
@@ -39,10 +51,10 @@ app.get('/users/:userId', function (req, res) {
 });
 
 // Create User endpoints
-app.post('/users', function (req, res) {
-  const { userId, name } = req.body;
-  if (typeof userId !== 'string') {
-    res.status(400).json({ error: '"userId" must be a string' });
+app.post('/test', function (req, res) {
+  const { uuid, name } = req.body;
+  if (typeof uuid !== 'string') {
+    res.status(400).json({ error: '"uuid" must be a string' });
   } else if (typeof name !== 'string') {
     res.status(400).json({ error: '"name" must be a string' });
   }
@@ -50,7 +62,7 @@ app.post('/users', function (req, res) {
   const params = {
     TableName: USERS_TABLE,
     Item: {
-      userId: userId,
+      uuid: uuid,
       name: name,
     },
   };
@@ -60,7 +72,7 @@ app.post('/users', function (req, res) {
       console.log(error);
       res.status(400).json({ error: 'Could not create user' });
     }
-    res.json({ userId, name });
+    res.json({ uuid, name });
   });
 });
 
