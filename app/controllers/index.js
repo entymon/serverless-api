@@ -11,10 +11,6 @@ const router = express.Router();
 const ExtractJwt = passportJWT.ExtractJwt;
 const JwtStrategy = passportJWT.Strategy;
 
-router.all('*', async (request, response, next) => {
-
-});
-
 router.get('/', (req, res, next) => {
   res.send('test');
 });
@@ -75,6 +71,10 @@ router.get('/secretDebug',
 
 router.get('/secret', passport.authenticate('jwt', { session: false }), (req, res) => {
   res.json('Success! You can not see this without a token');
+});
+
+router.all('*', async (request, response, next) => {
+
 });
 
 module.exports = router;

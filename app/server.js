@@ -5,58 +5,22 @@ const bodyParser = require('body-parser');
 const AWS = require('aws-sdk');
 const routes = require('./controllers/index');
 
+const dynamoDb = require('./services/dynamodb');
+
 const app = express();
 
-const USERS_TABLE = process.env.USERS_TABLE;
-const IS_OFFLINE = process.env.IS_OFFLINE;
-
-let dynamoDb;
-if (IS_OFFLINE === 'true') {
-  dynamoDb = new AWS.DynamoDB.DocumentClient({
-    region: 'localhost',
-    endpoint: 'http://localhost:8000'
-  });
-} else {
-  dynamoDb = new AWS.DynamoDB.DocumentClient();
-}
 
 app.use(bodyParser.json({ strict: false }));
 
 app.use('/', routes);
 
 
-
-
-
-
-
-
-
-
-// app.get('/', function (req, res) {
-//   res.send('Hello World home!');
-// });
-//
-// app.get('/norman/:id', function (req, res) {
-//   res.json({
-//     id: req.params.id
-//   });
-// });
-//
-// app.get('/express', function (req, res) {
-//   res.send('Hello World help!');
-// });
-//
-// app.get('/test', function (req, res) {
-//   res.send('Hello World test!');
-// });
-
 // Get User endpoint
 app.get('/users/:userId', function (req, res) {
   const params = {
     TableName: USERS_TABLE,
     Key: {
-      userId: req.params.userId,
+      userId: req.params.uuid,
     },
   };
 
@@ -66,8 +30,8 @@ app.get('/users/:userId', function (req, res) {
       res.status(400).json({ error: 'Could not get user' });
     }
     if (result.Item) {
-      const { userId, name } = result.Item;
-      res.json({ userId, name });
+      const { uuid, name } = result.Item;
+      res.json({ uuid, name });
     } else {
       res.status(404).json({ error: 'User not found' });
     }

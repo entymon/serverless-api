@@ -41,11 +41,11 @@ resources:
       Properties:
         AttributeDefinitions:
           -
-            AttributeName: userId
+            AttributeName: uuid
             AttributeType: S
         KeySchema:
           -
-            AttributeName: userId
+            AttributeName: uuid
             KeyType: HASH
         ProvisionedThroughput:
           ReadCapacityUnits: 1
