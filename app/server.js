@@ -11,6 +11,8 @@ app.use(bodyParser.json({ strict: false }));
 
 app.use('/', routes);
 
+
+//========== configuration
 // const IS_OFFLINE = process.env.IS_OFFLINE;
 // let dynamoDb;
 // if (IS_OFFLINE === 'true') {
@@ -24,6 +26,7 @@ app.use('/', routes);
 // }
 //
 // const USERS_TABLE = process.env.USERS_TABLE;
+//============ configuration
 
 app.use(bodyParser.json({ strict: false }));
 
