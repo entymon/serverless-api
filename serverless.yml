@@ -55,7 +55,7 @@ resources:
 plugins:
   - serverless-offline
   - serverless-express
-  - serverless-webpack
+#  - serverless-webpack
   - serverless-dynamodb-local
 
 custom:
@@ -63,11 +63,11 @@ custom:
   serverless-offline:
     port: 4000
 
-  webpack:
-    webpackConfig: 'webpack.config.js'   # Name of webpack configuration file
-    includeModules: false   # Node modules configuration for packaging
-    packager: 'yarn'   # Packager that will be used to package your external modules
-    packExternalModulesMaxBuffer: 200 * 1024   # Size of stdio buffers for spawned child processes
+#  webpack:
+#    webpackConfig: 'webpack.config.js'   # Name of webpack configuration file
+#    includeModules: false   # Node modules configuration for packaging
+#    packager: 'yarn'   # Packager that will be used to package your external modules
+#    packExternalModulesMaxBuffer: 200 * 1024   # Size of stdio buffers for spawned child processes
 
   dynamodb:
     start:
