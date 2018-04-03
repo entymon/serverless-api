@@ -1,43 +1,55 @@
+require('dotenv').config();
+
 const express = require('serverless-express/express');
 const bodyParser = require('body-parser');
 const AWS = require('aws-sdk');
+const routes = require('./controllers/index');
 
 const app = express();
-const USERS_TABLE = process.env.USERS_TABLE;
-require('dotenv').config();
 
+const USERS_TABLE = process.env.USERS_TABLE;
 const IS_OFFLINE = process.env.IS_OFFLINE;
+
 let dynamoDb;
 if (IS_OFFLINE === 'true') {
   dynamoDb = new AWS.DynamoDB.DocumentClient({
     region: 'localhost',
     endpoint: 'http://localhost:8000'
   });
-  console.log(dynamoDb);
 } else {
   dynamoDb = new AWS.DynamoDB.DocumentClient();
 }
 
 app.use(bodyParser.json({ strict: false }));
 
-app.get('/', function (req, res) {
-  res.send('Hello World home!');
-});
+app.use('/', routes);
 
-app.get('/norman/:id', function (req, res) {
-  res.json({
-    id: req.params.id
-  });
-});
 
-app.get('/express', function (req, res) {
-  res.send('Hello World help!');
-});
 
-app.get('/test', function (req, res) {
-  res.send('Hello World test!');
-});
 
+
+
+
+
+
+
+// app.get('/', function (req, res) {
+//   res.send('Hello World home!');
+// });
+//
+// app.get('/norman/:id', function (req, res) {
+//   res.json({
+//     id: req.params.id
+//   });
+// });
+//
+// app.get('/express', function (req, res) {
+//   res.send('Hello World help!');
+// });
+//
+// app.get('/test', function (req, res) {
+//   res.send('Hello World test!');
+// });
 
 // Get User endpoint
 app.get('/users/:userId', function (req, res) {
