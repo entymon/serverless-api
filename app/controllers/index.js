@@ -11,9 +11,10 @@ const router = express.Router();
 const ExtractJwt = passportJWT.ExtractJwt;
 const JwtStrategy = passportJWT.Strategy;
 
-router.get('/', (req, res, next) => {
-  res.send('test');
+router.get('/', function (req, res) {
+  res.send('Hello World!');
 });
+
 router.use('/posts', require('./post'));
 router.use('/users', require('./user'));
 
