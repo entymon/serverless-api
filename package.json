@@ -6,12 +6,8 @@
   "author": "entymon (Pawel Olejniczak)",
   "license": "MIT",
   "scripts": {
-    "start": "./node_modules/.bin/sls offline start -r us-east-1 --noTimeout",
-    "build": "webpack"
+    "start": "./node_modules/.bin/sls offline start -r us-east-1 --noTimeout"
   },
-  "pre-push": [
-    "build"
-  ],
   "dependencies": {
     "aws-sdk": "^2.219.1",
     "body-parser": "^1.18.2",
@@ -23,16 +19,7 @@
     "serverless-webpack": "^5.1.1"
   },
   "devDependencies": {
-    "babel-eslint": "^8.2.2",
-    "babel-loader": "^7.1.4",
-    "clean-webpack-plugin": "^0.1.19",
-    "eslint-loader": "^2.0.0",
-    "eslint-plugin-import": "^2.10.0",
-    "eslint-plugin-lodash": "^2.7.0",
-    "eslint-plugin-promise": "^3.7.0",
     "serverless-dynamodb-local": "^0.2.28",
     "serverless-offline": "^3.20.0",
-    "webpack": "^4.4.1",
-    "webpack-node-externals": "^1.7.2"
   }
 }
