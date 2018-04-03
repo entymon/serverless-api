@@ -16,18 +16,24 @@ if (IS_OFFLINE === 'true') {
 }
 
 module.exports.createUser = async (User) => {
+
   const params = {
     TableName: USERS_TABLE,
     Item: {
       uuid: User.uuid,
-      name: User.name,
-    },
+      name: User.name
+    }
   };
-
-  // dynamoDb.put(params, (error, x) => {
-  //   console.log(error, x, 'qweqwewe');
-  // });
-  return dynamoDb.put(params).promise();
+  return new Promise((resolve, reject) => {
+    dynamoDb.put(params).promise()
+      .catch(error => {
+        console.log(error, 'user model level');
+        reject({ error: 'Could not create user' });
+      })
+      .then(() => {
+        resolve({ ok: 'user was created' });
+      });
+  });
 };
 
 module.exports.updateUser = async (uuid) => {
@@ -39,12 +45,14 @@ module.exports.getAllUsers = async () => {
 };
 
 module.exports.getUserByUuid = async (User) => {
+
   const params = {
     TableName: USERS_TABLE,
     Key: {
       uuid: User.uuid
     }
   };
+
   return new Promise((resolve, reject) => {
     dynamoDb.get(params).promise()
       .catch(error => {

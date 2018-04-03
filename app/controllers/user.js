@@ -45,21 +45,14 @@ router.post('/', (req, res) => {
     res.status(400).json({ error: '"name" must be a string' });
   }
 
-  const params = {
-    TableName: USERS_TABLE,
-    Item: {
-      uuid: uuid,
-      name: name
-    }
-  };
-
-  dynamoDb.put(params, (error) => {
-    if (error) {
+  createUser({ uuid, name })
+    .catch(error => {
       console.log(error);
-      res.status(400).json({ error: 'Could not create user' });
-    }
-    res.json({ uuid, name });
-  });
+      res.status(400).json(error);
+    })
+    .then(() => {
+      res.json({ uuid, name });
+    });
 });
 
 module.exports = router;
