@@ -5,13 +5,31 @@
   "main": "server.js",
   "author": "entymon (Pawel Olejniczak)",
   "license": "MIT",
+  "scripts": {
+    "start": "./node_modules/.bin/sls offline start -r us-east-1 --noTimeout",
+    "build": "webpack"
+  },
+  "pre-push": [
+    "build"
+  ],
   "dependencies": {
     "dotenv": "^5.0.1",
+    "eslint": "^4.19.1",
     "express": "^4.16.3",
     "serverless-express": "^2.0.1",
-    "serverless-http": "^1.5.5"
+    "serverless-http": "^1.5.5",
+    "serverless-webpack": "^5.1.1"
   },
   "devDependencies": {
-    "serverless-offline": "^3.20.0"
+    "babel-eslint": "^8.2.2",
+    "babel-loader": "^7.1.4",
+    "clean-webpack-plugin": "^0.1.19",
+    "eslint-loader": "^2.0.0",
+    "eslint-plugin-import": "^2.10.0",
+    "eslint-plugin-lodash": "^2.7.0",
+    "eslint-plugin-promise": "^3.7.0",
+    "serverless-offline": "^3.20.0",
+    "webpack": "^4.4.1",
+    "webpack-node-externals": "^1.7.2"
   }
 }
