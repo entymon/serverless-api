@@ -3,6 +3,13 @@ require('dotenv').config();
 const express = require('express');
 const CognitoExpress = require('cognito-express');
 
+const cognitoExpress = new CognitoExpress({
+  region: process.env.COGNITO_AWS_REGION,
+  cognitoUserPoolId: process.env.COGNITO_USER_POOL_ID,
+  tokenUse: 'access',
+  tokenExpiration: 3600000
+});
+
 const {
   getUserByUuid,
   getUserByName
@@ -11,37 +18,20 @@ const {
 const router = express.Router();
 
 router.get('/', function (req, res) {
-  // res.send('Hello World!');
-  res.json({
-    region: process.env.AWS_REGION,
-    userPoolId: process.env.COGNITO_USER_POOL_ID,
-  });
+  res.send('Hello World!');
 });
 
-// Initializing CognitoExpress constructor
-const cognitoExpress = new CognitoExpress({
-  region: process.env.AWS_REGION,
-  cognitoUserPoolId: process.env.COGNITO_USER_POOL_ID,
-  tokenUse: 'access',
-  tokenExpiration: 3600000
-});
 
-// Our middleware that authenticates all APIs under our 'authenticatedRoute' Router
 router.use(function (req, res, next) {
 
-  //I'm passing in the access token in header under key accessToken
   const accessTokenFromClient = req.headers.accesstoken;
 
-  //Fail if token not present in header.
   if (!accessTokenFromClient) return res.status(401).send('Access Token missing from header');
 
   cognitoExpress.validate(accessTokenFromClient, function (err, response) {
 
-    //If API is not authenticated, Return 401 with error message.
-
     if (err) return res.status(401).send(err);
 
-    //Else API has been authenticated. Proceed.
     res.locals.user = response;
     next();
   });
@@ -60,3 +50,11 @@ router.all('*', async (request, response, next) => {
 });
 
 module.exports = router;
+
+
+//
+// {
+//   "name": "TokenExpiredError",
+//   "message": "jwt expired",
+//   "expiredAt": "2018-05-07T20:53:15.000Z"
+// }
