@@ -23,7 +23,10 @@ functions:
   app:
     handler: app/handler.app
     events:
-      - http: ANY /
+      - http:
+          path: /
+          method: ANY
+          cors: true
       - http: 'ANY {proxy+}'
   getUser:
     handler: app/handler.app
@@ -61,6 +64,8 @@ custom:
 
   serverless-offline:
     port: 4000
+    babelOptions:
+      presets: ["es2015", "stage-2"]
 
   dynamodb:
     start:

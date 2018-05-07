@@ -1,9 +1,7 @@
 require('dotenv').config();
 
 const express = require('express');
-const passport = require('passport');
-const passportJWT = require('passport-jwt');
-const jwt = require('jsonwebtoken');
+const CognitoExpress = require('cognito-express');
 
 const {
   getUserByUuid,
@@ -11,70 +9,50 @@ const {
 } = require('../models/user');
 
 const router = express.Router();
-const ExtractJwt = passportJWT.ExtractJwt;
-const JwtStrategy = passportJWT.Strategy;
 
 router.get('/', function (req, res) {
-  res.send('Hello World!');
+  // res.send('Hello World!');
+  res.json({
+    region: process.env.AWS_REGION,
+    userPoolId: process.env.COGNITO_USER_POOL_ID,
+  });
+});
+
+// Initializing CognitoExpress constructor
+const cognitoExpress = new CognitoExpress({
+  region: process.env.AWS_REGION,
+  cognitoUserPoolId: process.env.COGNITO_USER_POOL_ID,
+  tokenUse: 'access',
+  tokenExpiration: 3600000
+});
+
+// Our middleware that authenticates all APIs under our 'authenticatedRoute' Router
+router.use(function (req, res, next) {
+
+  //I'm passing in the access token in header under key accessToken
+  const accessTokenFromClient = req.headers.accesstoken;
+
+  //Fail if token not present in header.
+  if (!accessTokenFromClient) return res.status(401).send('Access Token missing from header');
+
+  cognitoExpress.validate(accessTokenFromClient, function (err, response) {
+
+    //If API is not authenticated, Return 401 with error message.
+
+    if (err) return res.status(401).send(err);
+
+    //Else API has been authenticated. Proceed.
+    res.locals.user = response;
+    next();
+  });
 });
 
 router.use('/posts', require('./post'));
 router.use('/users', require('./user'));
 
-const jwtOptions = {
-  jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('jwt'),
-  secretOrKey: process.env.AUTH0_SECRET
-};
-
-const strategy = new JwtStrategy(jwtOptions, (jwt_payload, next) => {
-
-  const userPromise = getUserByUuid(jwt_payload.uuid);
-  userPromise.then((user) => {
-    if (user) {
-      next(null, user);
-    } else {
-      next(null, false);
-    }
-  });
-});
-
-passport.use(strategy);
-
-router.post('/login', (req, res, next) => {
-  let name = '';
-  let password = '';
-  if (req.body.name && req.body.password) {
-    name = req.body.name;
-    password = req.body.password;
-  }
-
-  const userPromise = getUserByName(name);
-
-  userPromise.then(user => {
-    if (!user) {
-      res.status(401).json({ message: 'no such user found' });
-    }
-
-    if (user.password === password) {
-      const payload = { uuid: user.uuid };
-      const token = jwt.sign(payload, jwtOptions.secretOrKey);
-      res.json({ message: 'ok', token: token });
-    } else {
-      res.status(401).json({ message: 'passwords did not match' });
-    }
-  });
-});
-
-router.get('/secretDebug',
-  (req, res, next) => {
-    console.log(req.get('Authorization'));
-    next();
-  }, (req, res) => {
-    res.json('debugging');
-  });
-
-router.get('/secret', passport.authenticate('jwt', { session: false }), (req, res) => {
-  res.json('Success! You can not see this without a token');
+// Define your routes that need authentication check
+router.get('/test', function (req, res, next) {
+  res.send(`Hi ${res.locals.user.username}, your API call is authenticated!`);
 });
 
 router.all('*', async (request, response, next) => {

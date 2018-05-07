@@ -10,6 +10,11 @@ Keyword: NodeJS, Lambda, DynamoDB, AWS
 1. Run `yarn` and install all dependencies
 2. Copy `.env.example` as `.env`
 
+### Setup local environment
+
+1. Install DynamoDB locaaly: `sls dynamodb install`
+2. `$ yarn start`
+
 ### Deploy to stage
 
 1. Create account in Amazon Web Services and add new user. Full instruction how to do this you can find on viedo:
