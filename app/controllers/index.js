@@ -5,7 +5,10 @@ const passport = require('passport');
 const passportJWT = require('passport-jwt');
 const jwt = require('jsonwebtoken');
 
-const { getUserByUuid } = require('../models/user');
+const {
+  getUserByUuid,
+  getUserByName
+} = require('../models/user');
 
 const router = express.Router();
 const ExtractJwt = passportJWT.ExtractJwt;

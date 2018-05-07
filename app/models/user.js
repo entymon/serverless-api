@@ -10,7 +10,6 @@ if (IS_OFFLINE === 'true') {
     region: 'localhost',
     endpoint: 'http://localhost:8000'
   });
-  console.log(dynamoDb);
 } else {
   dynamoDb = new AWS.DynamoDB.DocumentClient();
 }
@@ -34,14 +33,6 @@ module.exports.createUser = async (User) => {
         resolve({ ok: 'user was created' });
       });
   });
-};
-
-module.exports.updateUser = async (uuid) => {
-
-};
-
-module.exports.getAllUsers = async () => {
-
 };
 
 module.exports.getUserByUuid = async (User) => {
@@ -68,6 +59,14 @@ module.exports.getUserByUuid = async (User) => {
         }
       });
   });
+};
+
+module.exports.updateUser = async (uuid) => {
+
+};
+
+module.exports.getAllUsers = async () => {
+
 };
 
 module.exports.getUserByName = async (uuid) => {
