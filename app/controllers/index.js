@@ -2,10 +2,6 @@ require('dotenv').config();
 
 const express = require('express');
 const cognitoAuth = require('../middlewares/cognitoAuth');
-const {
-  getUserByUuid,
-  getUserByName
-} = require('../models/user');
 
 const router = express.Router();
 
@@ -23,8 +19,8 @@ router.get('/test', function (req, res, next) {
   res.send(`Hi ${res.locals.user.username}, your API call is authenticated!`);
 });
 
-router.all('*', async (request, response, next) => {
-
+router.all('*', async (req, res, next) => {
+  res.send('End of the world');
 });
 
 module.exports = router;

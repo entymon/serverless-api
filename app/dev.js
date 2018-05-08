@@ -9,5 +9,4 @@ const app = express();
 app.use(bodyParser.json({ strict: false }));
 app.use('/', routes);
 
-module.exports = app;
-
+app.listen(4000, () => console.log('Example app listening on port 4000!'));

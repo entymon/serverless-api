@@ -24,7 +24,8 @@
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
     "serverless-express": "^2.0.1",
-    "serverless-http": "^1.5.5"
+    "serverless-http": "^1.5.5",
+    "uuid": "^3.2.1"
   },
   "devDependencies": {
     "serverless-dynamodb-local": "^0.2.28",
