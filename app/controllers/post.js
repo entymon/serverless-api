@@ -14,8 +14,7 @@ router.get('/:uuid', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-  createPost().then(data => res.send(data));
-
+  createPost().then(data => res.json(data));
 });
 
 router.put('/:uuid', (req, res, next) => {

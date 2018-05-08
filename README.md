@@ -44,6 +44,11 @@ I used syntax `tableName: 'users-table-${self:provider.stage}'` - serverless com
 
 - Add Webpack and eslint
 
+### Debugging
+
+1. Run `yarn start`
+2. Run in separate window `node app/dev.js` - this one listen console logs but has to be restart any time something as changed
+
 
 
 
