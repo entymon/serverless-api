@@ -2,12 +2,13 @@ const express = require('express');
 const router = express.Router();
 const {
   createPost,
-  getPostByUuid
+  getPostByUuid,
+  getAllPosts
 } = require('../models/post');
 
 // Posts routes
 router.get('/', (req, res, next) => {
-  // get posts
+  getAllPosts().then(data => res.json(data));
 });
 
 router.get('/:uuid', (req, res, next) => {

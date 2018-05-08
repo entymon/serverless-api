@@ -30,7 +30,21 @@ module.exports.updatePost = async (uuid) => {
 };
 
 module.exports.getAllPosts = async () => {
+  const params = {
+    TableName: dbTable
+  };
 
+  return new Promise((resolve, reject) => {
+    docClient.scan(params, function (err, data) {
+      if (err) {
+        console.log(err);
+        reject(err);
+      } else {
+        console.log(data);
+        resolve(data);
+      }
+    });
+  });
 };
 
 module.exports.getPostByUuid = async (uuid) => {
