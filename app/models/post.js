@@ -5,16 +5,8 @@ const awsConfig = require('../configs/awsConfig');
 const dbTable = 'posts';
 const docClient = new AWS.DynamoDB.DocumentClient(awsConfig);
 
-module.exports.createPost = async () => {
-  const item = {
-    'uuid': uuidv1(),
-    'title': 'test title',
-    'content': 'lorem ipsum dolor semit and etc trlala cola cran',
-    'info': {
-      'plot': 'Nothing happens at all.',
-      'rating': 0
-    }
-  };
+module.exports.createPost = async (item) => {
+  item.uuid = uuidv1();
   const params = {
     TableName: dbTable,
     Item: item
@@ -44,15 +36,19 @@ module.exports.getAllPosts = async () => {
 module.exports.getPostByUuid = async (uuid) => {
   const params = {
     Key: {
-      'uuid': {
-        S: uuid
-      }
+      uuid: uuid
     },
     TableName: dbTable
   };
-  dynamodb.getItem(params, function (err, data) {
-    if (err) console.log(err, err.stack);
-    else console.log(data);
+  return new Promise((resolve, reject) => {
+    docClient.get(params, function (err, data) {
+      if (err) {
+        console.log(err, err.stack);
+        reject(err);
+      } else {
+        resolve(data);
+      }
+    });
   });
 };
 
