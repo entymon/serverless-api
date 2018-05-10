@@ -7,7 +7,6 @@ const {
   getAllPosts
 } = require('../models/post');
 
-// Posts routes
 router.get('/', (req, res, next) => {
   console.log('test n0demon');
   getAllPosts().then(data => res.json(data));
@@ -18,21 +17,6 @@ router.get('/:uuid', (req, res, next) => {
 });
 
 /**
- *
- *  const post = {
-      title: [string],
-      content: [string],
-      author: {
-        uuid: 'sdassadasdwewe',
-        name: 'Pawel',
-      },
-      categories: [
-        'asdwewew', 'weweweerewr'
-      ]
-    };
- */
-
-/**
  * @swagger
  * /posts:
  *   post:
@@ -40,16 +24,26 @@ router.get('/:uuid', (req, res, next) => {
  *    produces:
  *      - application/json
  *    parameters:
- *      - name: username
- *        description: Username to use for login.
+ *      - name: title
+ *        description: Title of post.
  *        in: formData
  *        required: true
  *        type: string
- *      - name: password
- *        description: User's password.
+ *      - name: content
+ *        description: Content of post.
  *        in: formData
  *        required: true
  *        type: string
+ *      - name: author
+ *        description: Author of post.
+ *        in: formData
+ *        required: true
+ *        type: object
+ *      - name: categories
+ *        description: Content of post.
+ *        in: formData
+ *        required: true
+ *        type: Array
  *    responses:
  *      '201':
  *        description: Information about created object
