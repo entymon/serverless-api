@@ -23,7 +23,7 @@ router.get('/', function (req, res) {
   res.send('Hello World!');
 });
 
-// router.use(cognitoAuth); TODO: uncomment authorization !!!!
+// router.use(cognitoAuth); // TODO: uncomment authorization !!!!
 
 router.use('/posts', require('./post'));
 router.use('/users', require('./user'));

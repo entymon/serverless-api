@@ -13,8 +13,7 @@ module.exports = (req, res, next) => {
 
   if (!accessTokenFromClient) {
     return res.status(401).json({
-      status: 401,
-      message: 'Access Token missing from header',
+      message: 'access token missing from header',
       body: {}
     });
   }
@@ -23,12 +22,11 @@ module.exports = (req, res, next) => {
 
     if (err) {
       const responseModel = {
-        status: 401,
         message: '',
         body: err
       };
       if (err.name === TOKEN_EXPIRED) {
-        responseModel.message = 'token expired';
+        responseModel.message = 'access token expired';
       }
       return res.status(401).json(responseModel);
     }

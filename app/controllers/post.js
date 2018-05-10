@@ -7,6 +7,25 @@ const {
   getAllPosts
 } = require('../models/post');
 
+/**
+ * @swagger
+ * /posts:
+ *   get:
+ *    description: Get all posts
+ *    produces:
+ *      - application/json
+ *    responses:
+ *      200:
+ *        description: Returns all posts
+ *        schema:
+ *          type: array
+ *          items:
+ *            $ref: "#/definitions/Post"
+ *      default:
+ *        description: API error
+ *        schema:
+ *          $ref: '#/definitions/ErrorModel'
+ */
 router.get('/', (req, res, next) => {
   getAllPosts().then(data => res.json(data));
 });
@@ -34,7 +53,10 @@ router.get('/:uuid', (req, res, next) => {
  *        description: created post object
  *        schema:
  *          $ref: "#/definitions/Post"
- *
+ *      default:
+ *        description: API error
+ *        schema:
+ *          $ref: '#/definitions/ErrorModel'
  */
 router.post('/', (req, res, next) => {
 
@@ -50,11 +72,7 @@ router.post('/', (req, res, next) => {
   if (validation.valid) {
     res.status(200).send('Welcome!');
     createPost(req.body)
-      .then(data => res.json({
-        status: 200,
-        message: 'post was added',
-        body: data
-      }));
+      .then(data => res.json(data));
   } else {
     res.status(422).send({ errors: validation.errors });
   }

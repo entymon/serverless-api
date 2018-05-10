@@ -55,6 +55,30 @@ definitions:
       username:
         type: string
 
+  ErrorModel:
+    type: object
+    required:
+    - message
+    - body
+    properties:
+      message:
+        type: string
+      body:
+        type: object
+
+  CognitoErrorModel:
+    type: object
+    required:
+    - name
+    - message
+    - expiredAt
+    properties:
+      name:
+        type: string
+      message:
+        type: string
+      expiredAt:
+        type: string
 
 
 
