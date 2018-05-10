@@ -62,7 +62,7 @@ I used syntax `tableName: 'users-table-${self:provider.stage}'` - serverless com
 
 ### Debugging
 
-1. Run `yarn start` for run serverless-offline
+1. Run `yarn start` for run serverless-offline // actually works perfect without node. Some missed babel libraries blocked console.
 2. Run `node app/dev.js` in separate window  - this one listen console logs but has to be restart any time if something was changed
 
 

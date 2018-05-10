@@ -35,8 +35,22 @@ module.exports.createPost = async (item) => {
  * @param uuid
  * @returns {Promise<void>}
  */
-module.exports.updatePost = async (uuid) => {
+module.exports.updatePost = async (uuid, item) => {
+  const params = {
+    TableName: dbTable,
+    Item: item
+  };
 
+  return new Promise((resolve, reject) => {
+    docClient.put(params, function(err, data) {
+      if (err) {
+        console.log(err);
+        reject(err);
+      } else {
+        resolve(data);
+      }
+    });
+  });
 };
 
 /**

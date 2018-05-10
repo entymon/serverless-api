@@ -8,7 +8,8 @@ const {
   createPost,
   getPostByUuid,
   getAllPosts,
-  deletePost
+  deletePost,
+  updatePost
 } = require('../models/post');
 
 /**
@@ -34,7 +35,7 @@ const {
  *        schema:
  *          $ref: '#/definitions/ErrorModel'
  */
-router.get('/', (req, res, next) => {
+router.get('/', (req, res) => {
   getAllPosts().then(data => res.status(200).json(data));
 });
 
@@ -69,14 +70,15 @@ router.get('/', (req, res, next) => {
  *        schema:
  *          $ref: '#/definitions/ErrorModel'
  */
-router.get('/:uuid', (req, res, next) => {
+router.get('/:uuid', (req, res) => {
   const validation = validateParams(req, [
     presence('uuid'),
     isLength('uuid', { min: 36 }),
   ]);
 
   if (validation.valid) {
-    getPostByUuid(req.params.uuid).then(data => res.status(200).json(data));
+    getPostByUuid(req.params.uuid)
+      .then(data => res.status(200).json(data));
   } else {
     res.status(422).send({
       message: 'validation error',
@@ -117,7 +119,7 @@ router.get('/:uuid', (req, res, next) => {
  *        schema:
  *          $ref: '#/definitions/ErrorModel'
  */
-router.post('/', (req, res, next) => {
+router.post('/', (req, res) => {
 
   const validation = validateBody(req, [
     presence('title'),
@@ -176,7 +178,7 @@ router.post('/', (req, res, next) => {
  *        schema:
  *          $ref: '#/definitions/ErrorModel'
  */
-router.put('/:uuid', (req, res, next) => {
+router.put('/:uuid', (req, res) => {
 
   const validBody = validateBody(req, [
     presence('uuid'),
@@ -195,7 +197,12 @@ router.put('/:uuid', (req, res, next) => {
   ]);
 
   if (validBody.valid && validParam.valid) {
-    res.status(200).send('update post by uuid'); // TODO: Finish this endpoint
+    updatePost(req.params.uuid, req.body)
+      .then((data) => {
+        console.log(data, 'data form update');
+        res.status(200)
+          .send('update post by uuid');
+      });
   } else {
     const error = validBody.errors.concat(validParam.errors);
     res.status(422).send({
