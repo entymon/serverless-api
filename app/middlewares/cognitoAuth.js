@@ -1,4 +1,5 @@
 const CognitoExpress = require('cognito-express');
+const { TOKEN_EXPIRED } = require('../configs/constants');
 
 const cognitoExpress = new CognitoExpress({
   region: process.env.COGNITO_AWS_REGION,
@@ -10,11 +11,27 @@ const cognitoExpress = new CognitoExpress({
 module.exports = (req, res, next) => {
   const accessTokenFromClient = req.headers.accesstoken;
 
-  if (!accessTokenFromClient) return res.status(401).send('Access Token missing from header');
+  if (!accessTokenFromClient) {
+    return res.status(401).json({
+      status: 401,
+      message: 'Access Token missing from header',
+      body: {}
+    });
+  }
 
   cognitoExpress.validate(accessTokenFromClient, function (err, response) {
 
-    if (err) return res.status(401).send(err);
+    if (err) {
+      const responseModel = {
+        status: 401,
+        message: '',
+        body: err
+      };
+      if (err.name === TOKEN_EXPIRED) {
+        responseModel.message = 'token expired';
+      }
+      return res.status(401).json(responseModel);
+    }
 
     res.locals.user = response;
     next();

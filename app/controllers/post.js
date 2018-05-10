@@ -8,6 +8,7 @@ const {
 
 // Posts routes
 router.get('/', (req, res, next) => {
+  console.log('test n0demon');
   getAllPosts().then(data => res.json(data));
 });
 
