@@ -1,0 +1,60 @@
+
+definitions:
+  PostCreate:
+    type: object
+    required:
+      - title
+      - content
+      - author
+      - categories
+    properties:
+      title:
+        type: string
+      content:
+        type: string
+      author:
+        $ref: '#/definitions/Author'
+      categories:
+        type: array
+        items:
+          type: string
+
+  Post:
+      type: object
+      required:
+        - uuid
+        - title
+        - content
+        - author
+        - categories
+      properties:
+        uuid:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+        author:
+          $ref: '#/definitions/Author'
+        categories:
+          type: array
+          items:
+            type: string
+
+  AuthorCreate:
+    required:
+      - username
+
+  Author:
+    required:
+      - uuid
+      - username
+    properties:
+      uuid:
+        type: string
+      username:
+        type: string
+
+
+
+

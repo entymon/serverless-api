@@ -12,7 +12,8 @@ const swaggerSpec = swaggerJSDoc({
     },
   },
   apis: [
-    './app/controllers/*'
+    './app/controllers/*',
+    './app/documentation/models.yml',
   ],
 });
 
@@ -22,7 +23,7 @@ router.get('/', function (req, res) {
   res.send('Hello World!');
 });
 
-router.use(cognitoAuth);
+// router.use(cognitoAuth); TODO: uncomment authorization !!!!
 
 router.use('/posts', require('./post'));
 router.use('/users', require('./user'));

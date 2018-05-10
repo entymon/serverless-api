@@ -8,7 +8,6 @@ const {
 } = require('../models/post');
 
 router.get('/', (req, res, next) => {
-  console.log('test n0demon');
   getAllPosts().then(data => res.json(data));
 });
 
@@ -24,29 +23,18 @@ router.get('/:uuid', (req, res, next) => {
  *    produces:
  *      - application/json
  *    parameters:
- *      - name: title
- *        description: Title of post.
- *        in: formData
+ *      - in: 'body'
+ *        name: 'body'
+ *        description: 'Create Post'
  *        required: true
- *        type: string
- *      - name: content
- *        description: Content of post.
- *        in: formData
- *        required: true
- *        type: string
- *      - name: author
- *        description: Author of post.
- *        in: formData
- *        required: true
- *        type: object
- *      - name: categories
- *        description: Content of post.
- *        in: formData
- *        required: true
- *        type: Array
+ *        schema:
+ *          $ref: '#/definitions/PostCreate'
  *    responses:
- *      '201':
- *        description: Information about created object
+ *      201:
+ *        description: created post object
+ *        schema:
+ *          $ref: "#/definitions/Post"
+ *
  */
 router.post('/', (req, res, next) => {
 
