@@ -38,13 +38,13 @@ module.exports.createPost = async (item) => {
 module.exports.updatePost = async (uuid, item) => {
   const params = {
     TableName: dbTable,
-    Item: item
+    Item: item,
+    ReturnValues: 'ALL_OLD'
   };
 
   return new Promise((resolve, reject) => {
     docClient.put(params, function(err, data) {
       if (err) {
-        console.log(err);
         reject(err);
       } else {
         resolve(data);

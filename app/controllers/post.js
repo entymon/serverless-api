@@ -198,10 +198,16 @@ router.put('/:uuid', (req, res) => {
 
   if (validBody.valid && validParam.valid) {
     updatePost(req.params.uuid, req.body)
-      .then((data) => {
-        console.log(data, 'data form update');
+      .then(() => {
         res.status(200)
-          .send('update post by uuid');
+          .json(req.body);
+      })
+      .catch(error => {
+        delete error[error.code];
+        res.status(200).json({
+          message: 'dynamoDB error',
+          body: error
+        });
       });
   } else {
     const error = validBody.errors.concat(validParam.errors);
