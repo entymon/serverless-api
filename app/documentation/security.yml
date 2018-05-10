@@ -1,0 +1,5 @@
+securityDefinitions:
+  jwtHeader:
+    type: apiKey
+    in: header
+    name: accesstoken
