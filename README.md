@@ -68,7 +68,7 @@ This is easy way to check documentation as I didn't publish it yet.
 
 1. [ ] Get list of users from cognito - check if this is possible
 2. [ ] update item in post table dynamoDB
-3. [ ] add documentation to rest of post endpoint
+3. [x] add documentation to rest of post endpoint
 4. [ ] add validation error model
 
 
