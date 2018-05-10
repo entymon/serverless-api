@@ -21,6 +21,12 @@ Keyword: NodeJS, Lambda, DynamoDB, AWS, Swagger
 
 1. It's not required. Set variable COGNITO_AUTHORIZATION in .env file to `false` for switch off
 
+### API Documentation
+
+This is easy way to check documentation as I didn't publish it yet.
+
+1. Run endpoint: `/swagger.json` in Postman or other HTTP Client
+2. Copy JSON code and paste to `https://editor.swagger.io/`
 
 
 # DEPLOY
@@ -37,9 +43,12 @@ Author recommand use application to authorize deployment which is very usefull.
 2. From your root project run command: `$ sls dynamodb install` which installs local dynamoDB (You will have access to it from :8000)
 3. Run `serverless offline start` to start OFFLINE project
 
-
-
 # OTHER
+
+### Usefull links
+
+1. OpenAPI Specification (2.0) [https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md]
+2. Validation documentation (property-validator) [https://www.npmjs.com/package/property-validator]
 
 ### Usefull commands
 
@@ -55,13 +64,6 @@ I used syntax `tableName: 'users-table-${self:provider.stage}'` - serverless com
 
 1. Run `yarn start` for run serverless-offline
 2. Run `node app/dev.js` in separate window  - this one listen console logs but has to be restart any time if something was changed
-
-### API Documentation
-
-This is easy way to check documentation as I didn't publish it yet.
-
-1. Run endpoint: `/swagger.json` in Postman or other HTTP Client
-2. Copy JSON code and paste to `https://editor.swagger.io/`
 
 
 # TODO:
