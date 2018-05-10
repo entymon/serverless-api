@@ -23,8 +23,10 @@
     "jsonwebtoken": "^8.2.0",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
+    "property-validator": "^0.8.2",
     "serverless-express": "^2.0.1",
     "serverless-http": "^1.5.5",
+    "swagger-jsdoc": "^1.9.7",
     "uuid": "^3.2.1"
   },
   "devDependencies": {
