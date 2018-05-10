@@ -13,6 +13,7 @@ const swaggerSpec = swaggerJSDoc({
   },
   apis: [
     './app/controllers/*',
+    './app/documentation/errors.yml',
     './app/documentation/models.yml',
   ],
 });

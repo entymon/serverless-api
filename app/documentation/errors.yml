@@ -1,0 +1,60 @@
+definitions:
+  ErrorModel:
+    type: object
+    required:
+    - message
+    - body
+    properties:
+      message:
+        type: string
+      body:
+        type: object
+
+  401_ErrorModel:
+    type: object
+    required:
+    - message
+    - body
+    properties:
+      message:
+        type: string
+      body:
+        $ref: '#/definitions/CognitoErrorModel'
+
+  422_ErrorModel:
+    type: object
+    required:
+    - message
+    - body
+    properties:
+      message:
+        type: string
+      body:
+        $ref: '#/definitions/ValidationErrorModel'
+
+
+  CognitoErrorModel:
+    type: object
+    required:
+    - name
+    - message
+    - expiredAt
+    properties:
+      name:
+        type: string
+      message:
+        type: string
+      expiredAt:
+        type: string
+
+  ValidationErrorModel:
+    type: object
+    required:
+    - field
+    - message
+    properties:
+      field:
+        type: string
+      message:
+        type: string
+

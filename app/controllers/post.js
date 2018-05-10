@@ -76,6 +76,14 @@ router.get('/:uuid', (req, res, next) => {
  *        description: created post object
  *        schema:
  *          $ref: "#/definitions/Post"
+ *      401:
+ *        description: authorization error
+ *        schema:
+ *          $ref: "#/definitions/401_ErrorModel"
+ *      422:
+ *        description: validation error
+ *        schema:
+ *          $ref: "#/definitions/422_ErrorModel"
  *      default:
  *        description: API error
  *        schema:
@@ -96,7 +104,10 @@ router.post('/', (req, res, next) => {
     createPost(req.body)
       .then(data => res.json(data));
   } else {
-    res.status(422).send({ errors: validation.errors });
+    res.status(422).send({
+      message: 'validation error',
+      body: validation.errors
+    });
   }
 });
 
