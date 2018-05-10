@@ -4,7 +4,8 @@ const router = express.Router();
 const {
   createPost,
   getPostByUuid,
-  getAllPosts
+  getAllPosts,
+  deletePost
 } = require('../models/post');
 
 /**
@@ -159,14 +160,26 @@ router.put('/:uuid', (req, res, next) => {
  *        type: 'string'
  *    responses:
  *      200:
- *        description: empty response
+ *        description: success - element was deleted
+ *      503:
+ *        description: unique database error
+ *        schema:
+ *          $ref: "#/definitions/503_DB_ErrorModel"
  *      default:
  *        description: API error
  *        schema:
  *          $ref: '#/definitions/ErrorModel'
  */
 router.delete('/:uuid', (req, res) => {
-  res.send('delete post');
+  deletePost(req.params.uuid)
+    .then(() => res.json({}))
+    .catch(error => {
+      delete error[error.code];
+      return res.json({
+        message: 'dynamoDB error',
+        body: error
+      });
+    }) ;
 });
 
 module.exports = router;

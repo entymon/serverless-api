@@ -5,6 +5,11 @@ const awsConfig = require('../configs/awsConfig');
 const dbTable = 'posts';
 const docClient = new AWS.DynamoDB.DocumentClient(awsConfig);
 
+/**
+ * Create Post
+ * @param item
+ * @returns {Promise<any>}
+ */
 module.exports.createPost = async (item) => {
   item.uuid = uuidv1();
   const params = {
@@ -25,10 +30,19 @@ module.exports.createPost = async (item) => {
 
 };
 
+/**
+ * Update post
+ * @param uuid
+ * @returns {Promise<void>}
+ */
 module.exports.updatePost = async (uuid) => {
 
 };
 
+/**
+ * Get all posts
+ * @returns {Promise<any>}
+ */
 module.exports.getAllPosts = async () => {
   const params = {
     TableName: dbTable
@@ -40,13 +54,17 @@ module.exports.getAllPosts = async () => {
         console.log(err);
         reject(err);
       } else {
-        console.log(data);
         resolve(data);
       }
     });
   });
 };
 
+/**
+ * Get post by uuid
+ * @param uuid
+ * @returns {Promise<any>}
+ */
 module.exports.getPostByUuid = async (uuid) => {
   const params = {
     Key: {
@@ -66,6 +84,26 @@ module.exports.getPostByUuid = async (uuid) => {
   });
 };
 
+/**
+ * Delete post
+ * @param uuid
+ * @returns {Promise<void>}
+ */
 module.exports.deletePost = async (uuid) => {
+  const params = {
+    TableName: dbTable,
+    Key: {
+      uuid: uuid
+    }
+  };
 
+  return new Promise((resolve, reject) => {
+    docClient.delete(params, function (err, data) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(data);
+      }
+    });
+  });
 };

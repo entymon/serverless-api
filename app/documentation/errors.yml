@@ -32,6 +32,17 @@ definitions:
       body:
         $ref: '#/definitions/ValidationErrorModel'
 
+  503_DB_ErrorModel:
+    type: object
+    required:
+    - message
+    - body
+    properties:
+      message:
+        type: string
+      body:
+        $ref: '#/definitions/DynamoDbErrorModel'
+
 
   CognitoErrorModel:
     type: object
@@ -57,4 +68,33 @@ definitions:
         type: string
       message:
         type: string
+
+  DynamoDbErrorModel:
+    type: object
+    required:
+    - message
+    - code
+    - time
+    - requestId
+    - statusCode
+    - retryable
+    - retryDelay
+    properties:
+      message:
+        type: string
+      code:
+        type: string
+      time:
+        type: string
+        format: date-time
+      requestId:
+        type: string
+      statusCode:
+        type: integer
+      retryable:
+        type: boolean
+      retryDelay:
+        type: number
+        format: double
+
 
