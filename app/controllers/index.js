@@ -30,11 +30,6 @@ if (process.env.COGNITO_AUTHORIZATION === true) {
 router.use('/posts', require('./post'));
 router.use('/users', require('./user'));
 
-// Define your routes that need authentication check
-router.get('/test', function (req, res, next) {
-  res.send(`Hi ${res.locals.user.username}, your API call is authenticated!`);
-});
-
 router.get('/swagger.json', function(req, res) {
   res.setHeader('Content-Type', 'application/json');
   res.send(swaggerSpec);
@@ -45,11 +40,3 @@ router.all('*', async (req, res, next) => {
 });
 
 module.exports = router;
-
-
-//
-// {
-//   "name": "TokenExpiredError",
-//   "message": "jwt expired",
-//   "expiredAt": "2018-05-07T20:53:15.000Z"
-// }

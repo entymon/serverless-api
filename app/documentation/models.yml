@@ -13,7 +13,7 @@ definitions:
       content:
         type: string
       author:
-        $ref: '#/definitions/Author'
+        $ref: '#/definitions/User'
       categories:
         type: array
         items:
@@ -35,17 +35,20 @@ definitions:
         content:
           type: string
         author:
-          $ref: '#/definitions/Author'
+          $ref: '#/definitions/User'
         categories:
           type: array
           items:
             type: string
 
-  AuthorCreate:
+  UserCreate:
     required:
       - username
+    properties:
+      username:
+        type: string
 
-  Author:
+  User:
     required:
       - uuid
       - username
