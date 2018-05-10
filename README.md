@@ -1,7 +1,9 @@
 ## INTRO
 
-This project like each other is a base for learning. This one is very first project based on serverless framework.
-Keyword: NodeJS, Lambda, DynamoDB, AWS
+This is my very first project based on serverless framework.
+Keyword: NodeJS, Lambda, DynamoDB, AWS, Swagger
+
+
 
 # SETUP
 
@@ -14,6 +16,14 @@ Keyword: NodeJS, Lambda, DynamoDB, AWS
 
 1. Install DynamoDB locaaly: `sls dynamodb install`
 2. `$ yarn start`
+
+### Cognito configuration
+
+1. It's not required. Set variable COGNITO_AUTHORIZATION in .env file to `false` for switch off
+
+
+
+# DEPLOY
 
 ### Deploy to stage
 
@@ -28,6 +38,7 @@ Author recommand use application to authorize deployment which is very usefull.
 3. Run `serverless offline start` to start OFFLINE project
 
 
+
 # OTHER
 
 ### Usefull commands
@@ -40,14 +51,17 @@ Author recommand use application to authorize deployment which is very usefull.
 1. I have got one problem where I didn't know what's going on. Followed to instructions in tutorial: `https://serverless.com/blog/serverless-express-rest-api/`
 I used syntax `tableName: 'users-table-${self:provider.stage}'` - serverless command line does not show any problems however each command execution gave empty result.
 
-### TODO
-
-- Add Webpack and eslint
-
 ### Debugging
 
-1. Run `yarn start`
-2. Run in separate window `node app/dev.js` - this one listen console logs but has to be restart any time something as changed
+1. Run `yarn start` for run serverless-offline
+2. Run `node app/dev.js` in separate window  - this one listen console logs but has to be restart any time if something was changed
+
+### API Documentation
+
+This is easy way to check documentation as I didn't publish it yet.
+
+1. Run endpoint: `/swagger.json` in Postman or other HTTP Client
+2. Copy JSON code and paste to `https://editor.swagger.io/`
 
 
 
