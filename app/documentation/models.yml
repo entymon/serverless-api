@@ -82,3 +82,78 @@ definitions:
         type: string
       username:
         type: string
+
+  UserAttributes:
+    required:
+      - updated_at
+    properties:
+      address:
+        type: object
+        schema:
+          $ref: '#/definitions/EmailUserAttributes'
+      birthdate:
+        type: string
+        minLength: 10
+        maxLength: 10
+        patern: '(\d{4})-(\d{2})-(\d{2})'
+      email:
+        type: string
+      family_name:
+        type: string
+      gender:
+        type: string
+      given_name:
+        type: string
+      zoneinfo:
+        type: string
+        pattern: '^[A-Z]([a-zA-Z\_]{0,})\/([a-zA-Z\_]{0,})[a-z]$'
+      locale:
+        type: string
+        pattern: '^([a-z]{2,3})_([A-Z]{2,3})$'
+      middle_name:
+        type: string
+      name:
+        type: string
+      nickname:
+        type: string
+      phone_number:
+        type: string
+        pattern: '^\+\d+$'
+        description: 'Phone numbers must follow these formatting rules: A phone number must start with a plus (+) sign, followed immediately by the country code. A phone number can only contain the + sign and digits. You must remove any other characters from a phone number, such as parentheses, spaces, or dashes (-) before submitting the value to the service. For example, a United States-based phone number must follow this format: +14325551212.'
+      picture:
+        type: string
+      preferred_username:
+        type: string
+        description: 'The preferred_username cannot be selected as both required and as an alias.'
+      profile:
+        type: string
+        pattern: 'http(|s):\/\/+'
+      timezone:
+        type: string
+      website:
+        type: string
+        pattern: 'http(|s):\/\/+'
+
+  EmailUserAttributes:
+    properties:
+      formated:
+        type: string
+      street_address:
+        type: string
+      locality:
+        type: string
+      region:
+        type: string
+      postal_code:
+        type: string
+      country:
+        type: string
+
+info:
+  userPoolAttributes:
+    description: 'Cognito user pool attributes'
+    url: 'https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-settings-attributes.html'
+
+  userPoolAttributesSepcification:
+    description: 'Full specification'
+    url: 'http://openid.net/specs/openid-connect-core-1_0.html#StandardClaims'

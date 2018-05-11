@@ -34,6 +34,11 @@ module.exports.signUp = (user) => {
   });
 };
 
+/**
+ * Gets user data
+ * @param accessToken
+ * @returns {Promise<any>}
+ */
 module.exports.getUserProfile = (accessToken) => {
   const params = {
     AccessToken: accessToken
@@ -41,6 +46,27 @@ module.exports.getUserProfile = (accessToken) => {
 
   return new Promise((resolve, reject) => {
     provider.getUser(params, function (err, data) {
+      if (err) reject(err);
+      else resolve(data);
+    });
+  });
+};
+
+/**
+ * Updates user attributes
+ * @param accessToken
+ * @param UserAttributes
+ * @returns {Promise<any>}
+ */
+module.exports.updateAttribute = (accessToken, UserAttributes) => {
+
+  const params = {
+    AccessToken: accessToken,
+    UserAttributes
+  };
+
+  return new Promise((resolve, reject) => {
+    provider.updateUserAttributes(params, function (err, data) {
       if (err) reject(err);
       else resolve(data);
     });
@@ -95,34 +121,32 @@ module.exports.getCredentials = () => {
  * @param resend
  * @returns {Promise<any>}
  */
-module.exports.adminCreateUser = (username,
-                                  email,
-                                  temporaryPassword,
-                                  resend = false) => {
-  let mode = 'SUPPRESS';
-  if (resend) mode = 'RESEND';
+module.exports.adminCreateUser =
+  (username, email, temporaryPassword, resend = false) => {
+    let mode = 'SUPPRESS';
+    if (resend) mode = 'RESEND';
 
-  const params = {
-    DesiredDeliveryMediums: ['EMAIL'],
-    ForceAliasCreation: true,
-    MessageAction: mode,
-    TemporaryPassword: temporaryPassword,
-    UserAttributes: [
-      {
-        Name: 'email',
-        Value: email
-      }
-    ],
-    Username: username,
-    UserPoolId: process.env.COGNITO_USER_POOL_ID
-  };
+    const params = {
+      DesiredDeliveryMediums: ['EMAIL'],
+      ForceAliasCreation: true,
+      MessageAction: mode,
+      TemporaryPassword: temporaryPassword,
+      UserAttributes: [
+        {
+          Name: 'email',
+          Value: email
+        }
+      ],
+      Username: username,
+      UserPoolId: process.env.COGNITO_USER_POOL_ID
+    };
 
-  return new Promise((resolve, reject) => {
-    provider.adminCreateUser(params, function (err, data) {
-      if (err) reject(err);
-      else resolve(data);
+    return new Promise((resolve, reject) => {
+      provider.adminCreateUser(params, function (err, data) {
+        if (err) reject(err);
+        else resolve(data);
+      });
     });
-  });
-};
+  };
 
 
