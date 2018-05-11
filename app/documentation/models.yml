@@ -3,11 +3,14 @@ definitions:
     type: object
     required:
       - title
+      - excerpt
       - content
       - author
       - categories
     properties:
       title:
+        type: string
+      excerpt:
         type: string
       content:
         type: string
@@ -23,6 +26,7 @@ definitions:
       required:
         - uuid
         - title
+        - excerpt
         - content
         - author
         - categories
@@ -30,6 +34,8 @@ definitions:
         uuid:
           type: string
         title:
+          type: string
+        excerpt:
           type: string
         content:
           type: string

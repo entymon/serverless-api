@@ -68,13 +68,15 @@ I used syntax `tableName: 'users-table-${self:provider.stage}'` - serverless com
 
 # TODO:
 
-1. [ ] Get list of users from cognito - check if this is possible
-2. [ ] update item in post table dynamoDB
+1. [ ] Get list of users from cognito
+2. [x] update item in post table dynamoDB
 3. [x] add documentation to rest of post endpoint
 4. [x] add validation error model
 5. [ ] add functional tests
 6. [ ] add unit tests
-
+7. [ ] create user via API
+8. [ ] update user via API
+9. [ ] deploy code to production server
 
 
 

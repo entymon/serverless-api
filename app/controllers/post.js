@@ -123,6 +123,7 @@ router.post('/', (req, res) => {
 
   const validation = validateBody(req, [
     presence('title'),
+    presence('excerpt'),
     presence('content'),
     presence('author.uuid'),
     presence('author.username'),
@@ -184,6 +185,7 @@ router.put('/:uuid', (req, res) => {
     presence('uuid'),
     isLength('uuid', { min: 36 }),
     presence('title'),
+    presence('excerpt'),
     presence('content'),
     presence('author.uuid'),
     presence('author.username'),
