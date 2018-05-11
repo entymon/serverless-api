@@ -5,10 +5,8 @@ const provider = new AWS.CognitoIdentityServiceProvider({
   region: process.env._AWS_REGION
 });
 
-
-
 /**
- * Sign Up
+ * Sign Up (does noe work for my current user pool TODO: create new with option to register)
  * @param user
  * @returns {Promise<any>}
  */
@@ -36,14 +34,20 @@ module.exports.signUp = (user) => {
   });
 };
 
+/**
+ * Get list of added users
+ * @returns {Promise<any>}
+ */
 module.exports.listUsers = () => {
   const params = {
     UserPoolId: process.env.COGNITO_USER_POOL_ID
   };
 
-  provider.listUsers(params, function (err, data) {
-    if (err) console.log(err, err.stack); // an error occurred
-    else     console.log(data);           // successful response
+  return new Promise((resolve, reject) => {
+    provider.listUsers(params, function (err, data) {
+      if (err) reject(err);
+      else resolve(data);
+    });
   });
 };
 

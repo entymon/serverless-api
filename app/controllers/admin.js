@@ -2,7 +2,7 @@ const express = require('express');
 const {
   validateBody, presence
 } = require('property-validator');
-const { getCredentials, adminCreateUser } = require('../services/CognitoIdentity');
+const { getCredentials, adminCreateUser, listUsers } = require('../services/CognitoIdentity');
 const { COGNITO_ERROR, VALIDATION_ERROR } = require('../configs/constants');
 
 const router = express.Router();
@@ -20,6 +20,37 @@ router.get('/credentials', (req, res) => {
     }));
 });
 
+/**
+ * @swagger
+ * /admin/users:
+ *   get:
+ *    description: Get all users
+ *    produces:
+ *      - application/json
+ *    responses:
+ *      200:
+ *        description: Returns all users
+ *        schema:
+ *          type: array
+ *          items:
+ *            $ref: "#/definitions/CognitoUser"
+ *      401:
+ *        description: authorization error
+ *        schema:
+ *          $ref: "#/definitions/401_ErrorModel"
+ *      default:
+ *        description: API error
+ *        schema:
+ *          $ref: '#/definitions/ErrorModel'
+ */
+router.get('/users', (req, res) => {
+  listUsers()
+    .then(data => res.status(200).json(data))
+    .catch(error => res.status(500).json({
+      message: COGNITO_ERROR,
+      body: error
+    }));
+});
 
 /**
  * @swagger
