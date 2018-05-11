@@ -34,6 +34,19 @@ module.exports.signUp = (user) => {
   });
 };
 
+module.exports.getUserProfile = (accessToken) => {
+  const params = {
+    AccessToken: accessToken
+  };
+
+  return new Promise((resolve, reject) => {
+    provider.getUser(params, function (err, data) {
+      if (err) reject(err);
+      else resolve(data);
+    });
+  });
+};
+
 /**
  * Get list of added users
  * @returns {Promise<any>}
@@ -59,7 +72,7 @@ module.exports.getCredentials = () => {
 
   AWS.config.region = process.env._AWS_REGION;
   AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-    IdentityPoolId: process.env.COGNITO_IDENTITY_POOL_ID,
+    IdentityPoolId: process.env.COGNITO_IDENTITY_POOL_ID
   });
 
   return new Promise((resolve) => {
@@ -68,7 +81,7 @@ module.exports.getCredentials = () => {
         accessKeyId: AWS.config.credentials.accessKeyId,
         secretAccessKey: AWS.config.credentials.secretAccessKey,
         sessionToken: AWS.config.credentials.sessionToken,
-        identityId: AWS.config.credentials.identityId,
+        identityId: AWS.config.credentials.identityId
       });
     });
   });
@@ -82,12 +95,10 @@ module.exports.getCredentials = () => {
  * @param resend
  * @returns {Promise<any>}
  */
-module.exports.adminCreateUser = (
-  username,
-  email,
-  temporaryPassword,
-  resend = false
-) => {
+module.exports.adminCreateUser = (username,
+                                  email,
+                                  temporaryPassword,
+                                  resend = false) => {
   let mode = 'SUPPRESS';
   if (resend) mode = 'RESEND';
 

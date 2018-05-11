@@ -26,6 +26,18 @@ definitions:
       UserStatus:
         type: string
 
+  CognitoBaseUser:
+    required:
+      - Username
+      - Attributes
+    properties:
+      Username:
+        type: string
+      Attributes:
+        type: array
+        items:
+          $ref: '#/definitions/CognitoUserAttribute'
+
   CognitoUserAttribute:
     required:
       - Name
