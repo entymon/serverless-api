@@ -3,6 +3,7 @@
 env:
   es6: true
   node: true
+  jest/globals: true
 parser: 'babel-eslint'
 parserOptions:
   sourceType: module
@@ -28,3 +29,5 @@ rules:
   object-curly-spacing: [error, always]
   prefer-const: error
   no-var: error
+plugins:
+  - jest

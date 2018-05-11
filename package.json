@@ -7,7 +7,10 @@
   "license": "MIT",
   "scripts": {
     "start": "./node_modules/.bin/sls offline start -r eu-west-1 --noTimeout",
-    "debug": "node --inspect `which serverless` offline start"
+    "debug": "node --inspect `which serverless` offline start",
+    "lint": "eslint app/**",
+    "test": "jest app",
+    "coverage": "jest --collectCoverageFrom=app/**.js --coverage app"
   },
   "dependencies": {
     "amazon-cognito-identity-js": "^2.0.3",
@@ -34,7 +37,16 @@
     "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-flow": "^6.23.0",
+    "eslint-plugin-jest": "^21.15.1",
+    "jest": "^22.4.3",
     "serverless-dynamodb-local": "^0.2.28",
-    "serverless-offline": "^3.20.0"
+    "serverless-offline": "^3.20.0",
+    "supertest": "^3.0.0"
+  },
+  "jest": {
+    "verbose": true,
+    "testPathIgnorePatterns": [
+      "./dist/"
+    ]
   }
 }
