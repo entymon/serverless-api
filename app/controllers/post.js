@@ -11,6 +11,7 @@ const {
   deletePost,
   updatePost
 } = require('../models/post');
+const { DYNAMO_DB_ERROR, VALIDATION_ERROR } = require('../configs/constants');
 
 /**
  * @swagger
@@ -81,7 +82,7 @@ router.get('/:uuid', (req, res) => {
       .then(data => res.status(200).json(data));
   } else {
     res.status(422).send({
-      message: 'validation error',
+      message: VALIDATION_ERROR,
       body: validation.errors
     });
   }
@@ -136,7 +137,7 @@ router.post('/', (req, res) => {
       .then(data => res.status(201).json(data));
   } else {
     res.status(422).send({
-      message: 'validation error',
+      message: VALIDATION_ERROR,
       body: validation.errors
     });
   }
@@ -207,14 +208,14 @@ router.put('/:uuid', (req, res) => {
       .catch(error => {
         delete error[error.code];
         res.status(200).json({
-          message: 'dynamoDB error',
+          message: DYNAMO_DB_ERROR,
           body: error
         });
       });
   } else {
     const error = validBody.errors.concat(validParam.errors);
     res.status(422).send({
-      message: 'validation error',
+      message: VALIDATION_ERROR,
       body: error
     });
   }
@@ -266,13 +267,13 @@ router.delete('/:uuid', (req, res) => {
       .catch(error => {
         delete error[error.code];
         res.status(200).json({
-          message: 'dynamoDB error',
+          message: DYNAMO_DB_ERROR,
           body: error
         });
       });
   } else {
     res.status(422).send({
-      message: 'validation error',
+      message: VALIDATION_ERROR,
       body: validation.errors
     });
   }

@@ -1,0 +1,37 @@
+definitions:
+
+  CognitoUser:
+    required:
+      - Username
+      - Attributes
+      - UserCreateDate
+      - UserLastModifiedDate
+      - Enabled
+      - UserStatus
+    properties:
+      Username:
+        type: string
+      Attributes:
+        type: array
+        items:
+          $ref: '#/definitions/CognitoUserAttribute'
+      UserCreateDate:
+        type: string
+        format: date-time
+      UserLastModifiedDate:
+        type: string
+        format: date-time
+      Enabled:
+        type: boolean
+      UserStatus:
+        type: string
+
+  CognitoUserAttribute:
+    required:
+      - Name
+      - Value
+    properties:
+      Name:
+        type: string
+      Value:
+        type: string

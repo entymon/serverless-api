@@ -14,6 +14,7 @@ const swaggerSpec = swaggerJSDoc({
   apis: [
     './app/controllers/*',
     './app/documentation/security.yml',
+    './app/documentation/cognito.yml',
     './app/documentation/errors.yml',
     './app/documentation/models.yml',
   ],
@@ -29,16 +30,28 @@ if (process.env.COGNITO_AUTHORIZATION === true) {
   router.use(cognitoAuth);
 }
 
+router.use('/admin', require('./admin'));
 router.use('/posts', require('./post'));
 router.use('/users', require('./user'));
 
-router.get('/swagger.json', function(req, res) {
+/**
+ * @swagger
+ * /documentation.json:
+ *   get:
+ *    description: Create new post in DynamoDB
+ *    produces:
+ *      - application/json
+ *    responses:
+ *      200:
+ *        description: swagger 2.0 documentation
+ */
+router.get('/documentation.json', function(req, res) {
   res.setHeader('Content-Type', 'application/json');
   res.send(swaggerSpec);
 });
 
 router.all('*', async (req, res, next) => {
-  res.send('End of the world');
+  res.send('Route does not exist. End of the world');
 });
 
 module.exports = router;

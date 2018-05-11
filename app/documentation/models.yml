@@ -46,6 +46,26 @@ definitions:
           items:
             type: string
 
+  AdminUser:
+    required:
+      - username
+      - password
+      - email
+    properties:
+      username:
+        type: string
+        description: 'username'
+      password:
+        type: string
+        description: 'temporary password for user'
+      email:
+        type: string
+        description: 'user email'
+      resend:
+        type: boolean
+        default: false
+        description: 'if true then invite will be resend to already created user'
+
   UserCreate:
     required:
       - username

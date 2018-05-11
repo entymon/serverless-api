@@ -1,5 +1,5 @@
 const express = require('express');
-const { signUp, getCredentials } = require('../services/CognitoIdentity');
+const { getCredentials, adminCreateUser, listUsers } = require('../services/CognitoIdentity');
 
 const router = express.Router();
 
@@ -12,7 +12,8 @@ router.get('/credentials', (req, res) => {
 });
 
 router.get('/', (req, res) => {
-
+  adminCreateUser();
+  res.send('something');
 });
 
 router.get('/:username', (req, res) => {
