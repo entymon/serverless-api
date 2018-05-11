@@ -1,23 +1,47 @@
 const AmazonCognitoIdentity = require('amazon-cognito-identity-js');
-const AWS = require('aws-sdk');
+const { AWS } = require('../configs/awsConfig');
 
-const myCredentials = new AWS.CognitoIdentityCredentials({
-  IdentityPoolId: process.env.COGNITO_IDENTITY_POOL_ID
-});
-
-new AWS.Config({
-  apiVersion: '2018-05-11',
-  credentials: myCredentials,
-  region: process.env.AWS_REGION,
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-});
-
-module.exports.test = () => {
-  console.log(AWS.config);
+const cognitoConfig = {
+  IdentityPoolId: process.env.COGNITO_IDENTITY_POOL_ID,
+  UserPoolId: process.env.COGNITO_USER_POOL_ID,
+  ClientId: process.env.COGNITO_USER_POOL_CLIENT_ID,
 };
 
+
 module.exports.signUp = () => {
+
+  AWS.config = {
+    apiVersion: '2018-05-11',
+    region: process.env._AWS_REGION,
+    accessKeyId: process.env._AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env._AWS_SECRET_ACCESS_KEY,
+    logger: console.log,
+    credentials: new AWS.CognitoIdentityCredentials(cognitoConfig)
+  };
+
+  console.log(AWS.config)
+
+  // Make the call to obtain credentials
+  AWS.config.credentials.get(function(){
+
+    // Credentials will be available when this function is called.
+    const accessKeyId = AWS.config.credentials.accessKeyId;
+    const secretAccessKey = AWS.config.credentials.secretAccessKey;
+    const sessionToken = AWS.config.credentials.sessionToken;
+    const identityId = AWS.config.credentials.identityId;
+
+    console.log(accessKeyId);
+    console.log(secretAccessKey);
+    console.log(sessionToken);
+    console.log(identityId);
+
+    // return res.send({
+    //   accessKeyId: accessKeyId
+    // });
+
+  });
+
+
   // const attributeList = [];
   //
   // const dataEmail = {
