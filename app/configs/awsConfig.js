@@ -5,9 +5,9 @@ const AWS = require('aws-sdk');
  */
 const globalConfiguration = {
   apiVersion: '2018-05-11',
-  region: process.env.AWS_REGION,
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: process.env._AWS_REGION,
+  accessKeyId: process.env._AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env._AWS_SECRET_ACCESS_KEY,
   logger: console.log
 };
 

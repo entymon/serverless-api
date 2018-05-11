@@ -7,60 +7,50 @@ const cognitoConfig = {
   ClientId: process.env.COGNITO_USER_POOL_CLIENT_ID,
 };
 
+/**
+ * Get Credentials
+ * @returns {Promise<any>}
+ */
+module.exports.getCredentials = () => {
+  AWS.config.credentials = new AWS.CognitoIdentityCredentials(cognitoConfig);
 
-module.exports.signUp = () => {
+  return new Promise((resolve) => {
+    AWS.config.credentials.get(() => {
+      resolve({
+        accessKeyId: AWS.config.credentials.accessKeyId,
+        secretAccessKey: AWS.config.credentials.secretAccessKey,
+        sessionToken: AWS.config.credentials.sessionToken,
+        identityId: AWS.config.credentials.identityId,
+      });
+    });
+  });
+};
 
-  AWS.config = {
-    apiVersion: '2018-05-11',
-    region: process.env._AWS_REGION,
-    accessKeyId: process.env._AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env._AWS_SECRET_ACCESS_KEY,
-    logger: console.log,
-    credentials: new AWS.CognitoIdentityCredentials(cognitoConfig)
+/**
+ * Sign Up
+ * @param user
+ * @returns {Promise<any>}
+ */
+module.exports.signUp = (user) => {
+  const userPool = new AmazonCognitoIdentity.CognitoUserPool(cognitoConfig);
+  const attributeList = [];
+
+  const dataEmail = {
+    Name: 'email',
+    Value: user.email
   };
 
-  console.log(AWS.config)
+  const attributeEmail = new AmazonCognitoIdentity.CognitoUserAttribute(dataEmail);
+  attributeList.push(attributeEmail);
 
-  // Make the call to obtain credentials
-  AWS.config.credentials.get(function(){
-
-    // Credentials will be available when this function is called.
-    const accessKeyId = AWS.config.credentials.accessKeyId;
-    const secretAccessKey = AWS.config.credentials.secretAccessKey;
-    const sessionToken = AWS.config.credentials.sessionToken;
-    const identityId = AWS.config.credentials.identityId;
-
-    console.log(accessKeyId);
-    console.log(secretAccessKey);
-    console.log(sessionToken);
-    console.log(identityId);
-
-    // return res.send({
-    //   accessKeyId: accessKeyId
-    // });
-
+  return new Promise((resolve, reject) => {
+    userPool.signUp(user.username, user.password, attributeList, null, function (err, result) {
+      if (err) {
+        reject(err);
+      } else {
+        const cognitoUser = result.user;
+        resolve(cognitoUser);
+      }
+    });
   });
-
-
-  // const attributeList = [];
-  //
-  // const dataEmail = {
-  //   Name: 'email',
-  //   Value: 'email@mydomain.com'
-  // };
-  //
-  // const attributeEmail = new AmazonCognitoIdentity.CognitoUserAttribute(dataEmail);
-  //
-  // attributeList.push(attributeEmail);
-  //
-  // console.log(userPool);
-  //
-  // userPool.signUp('username', 'password', attributeList, null, function(err, result) {
-  //   if (err) {
-  //     console.log(err);
-  //     return;
-  //   }
-  //   const cognitoUser = result.user;
-  //   console.log('user name is ' + cognitoUser.getUsername());
-  // });
 };
