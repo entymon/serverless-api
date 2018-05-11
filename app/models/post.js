@@ -1,9 +1,7 @@
-const AWS = require('aws-sdk');
 const uuidv1 = require('uuid/v1');
-const awsConfig = require('../configs/awsConfig');
+const { documentClient: docClient } = require('../configs/awsConfig');
 
 const dbTable = 'posts';
-const docClient = new AWS.DynamoDB.DocumentClient(awsConfig);
 
 /**
  * Create Post

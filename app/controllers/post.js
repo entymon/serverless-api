@@ -73,7 +73,7 @@ router.get('/', (req, res) => {
 router.get('/:uuid', (req, res) => {
   const validation = validateParams(req, [
     presence('uuid'),
-    isLength('uuid', { min: 36 }),
+    isLength('uuid', { min: 34 }),
   ]);
 
   if (validation.valid) {
@@ -183,7 +183,7 @@ router.put('/:uuid', (req, res) => {
 
   const validBody = validateBody(req, [
     presence('uuid'),
-    isLength('uuid', { min: 36 }),
+    isLength('uuid', { min: 34 }),
     presence('title'),
     presence('excerpt'),
     presence('content'),
@@ -195,7 +195,7 @@ router.put('/:uuid', (req, res) => {
 
   const validParam = validateParams(req, [
     presence('uuid'),
-    isLength('uuid', { min: 36 }),
+    isLength('uuid', { min: 34 }),
   ]);
 
   if (validBody.valid && validParam.valid) {
@@ -257,7 +257,7 @@ router.delete('/:uuid', (req, res) => {
 
   const validation = validateParams(req, [
     presence('uuid'),
-    isLength('uuid', { min: 36 }),
+    isLength('uuid', { min: 34 }),
   ]);
 
   if (validation.valid) {

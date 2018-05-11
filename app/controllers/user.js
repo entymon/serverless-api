@@ -1,9 +1,11 @@
 const express = require('express');
-const { getUserByUuid, createUser } = require('../models/user');
+const { signUp, test } = require('../services/CognitoIdentity');
 
 const router = express.Router();
 
 router.get('/', (req, res) => {
+  test();
+  // signUp();
   res.send('user get');
 });
 
