@@ -5,12 +5,6 @@ const db = require('../services/DynamoDB');
 
 const uuid = '7499d330-55e5-11e8-97e1-05025753431f';
 
-describe('Test the root path', () => {
-  test('It should response the GET method', () => {
-    return request(app).get('/').expect(200);
-  });
-});
-
 describe('Add record to Post table', () => {
 
   const data = {
@@ -25,14 +19,11 @@ describe('Add record to Post table', () => {
     author: {
       uuid: 'uuid',
       username: 'test author'
-    }
+    },
+    createdAt: '2018-05-12T16:06:45.784Z'
   };
   beforeAll(() => {
-    db.describeTable('posts').then((data) => {
-      if (data.Table.ItemCount === 0) {
-        client.updatePost(uuid, data);
-      }
-    });
+    client.updatePost(uuid, data);
   });
 });
 
@@ -40,7 +31,7 @@ describe('Tests endpoints: ANY /posts', () => {
 
   describe('GET /posts - get all posts', () => {
 
-    const expectedProps = [ 'uuid', 'title', 'excerpt', 'content', 'author', 'categories' ];
+    const expectedProps = [ 'uuid', 'title', 'excerpt', 'content', 'author', 'categories', 'createdAt', 'updatedAt' ];
 
     it('should return JSON array', () => {
       return request(app)
