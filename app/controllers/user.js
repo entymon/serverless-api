@@ -36,7 +36,7 @@ router.get('/profile', (req, res) => {
     .then(data => res.status(200).json(data))
     .catch(error => res.status(200).json({
       message: COGNITO_ERROR,
-      body: error
+      details: error
     }));
 });
 
@@ -86,13 +86,13 @@ router.put('/attributes', (req, res) => {
       .then(data => res.status(200).json(data))
       .catch(error => res.status(500).json({
         message: COGNITO_ERROR,
-        body: error
+        details: error
       }));
   } else {
     const error = validBody.errors.concat(validParam.errors);
     res.status(422).send({
       message: VALIDATION_ERROR,
-      body: error
+      details: error
     });
   }
 });

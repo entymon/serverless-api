@@ -99,14 +99,12 @@ definitions:
       - updated_at
     properties:
       address:
-        type: object
-        schema:
-          $ref: '#/definitions/EmailUserAttributes'
+        $ref: '#/definitions/EmailUserAttributes'
       birthdate:
         type: string
         minLength: 10
         maxLength: 10
-        patern: '(\d{4})-(\d{2})-(\d{2})'
+        pattern: '(\d{4})-(\d{2})-(\d{2})'
       email:
         type: string
       family_name:
@@ -160,11 +158,14 @@ definitions:
       country:
         type: string
 
-info:
-  userPoolAttributes:
-    description: 'Cognito user pool attributes'
-    url: 'https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-settings-attributes.html'
-
-  userPoolAttributesSepcification:
-    description: 'Full specification'
-    url: 'http://openid.net/specs/openid-connect-core-1_0.html#StandardClaims'
+tags:
+  - name: User Pool Attributes
+    description: Description of attributes requirements
+    externalDocs:
+      description: 'Cognito user pool attributes'
+      url: 'https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-settings-attributes.html'
+  - name: User Pool Attributes Specification
+    description: General specification for values
+    externalDocs:
+      description: 'Full specification'
+      url: 'http://openid.net/specs/openid-connect-core-1_0.html#StandardClaims'

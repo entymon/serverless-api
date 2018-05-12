@@ -34,7 +34,7 @@ if (process.env.IS_OFFLINE === 'true') {
   };
 } else {
   dynamoDBConfig = {
-    region: 'eu-west-1',
+    region: process.env._AWS_REGION,
     endpoint: 'http://localhost:8000'
   };
 }

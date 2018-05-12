@@ -26,6 +26,15 @@ router.get('/', function (req, res) {
   res.send('Hello World!');
 });
 
+const { describeTable } = require('../services/DynamoDB');
+router.get('/test', function (req, res) {
+  describeTable('posts')
+    .then(data => res.json(data))
+    .catch(error => {
+      res.json(error);
+    });
+});
+
 if (process.env.COGNITO_AUTHORIZATION === true) {
   router.use(cognitoAuth);
 }

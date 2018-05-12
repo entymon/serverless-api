@@ -3,44 +3,56 @@ definitions:
     type: object
     required:
     - message
-    - body
+    - details
     properties:
       message:
         type: string
-      body:
+      details:
         type: object
 
   401_ErrorModel:
     type: object
     required:
     - message
-    - body
+    - details
     properties:
       message:
         type: string
-      body:
+      details:
         $ref: '#/definitions/CognitoErrorModel'
 
   422_ErrorModel:
     type: object
     required:
     - message
-    - body
+    - details
     properties:
       message:
         type: string
-      body:
-        $ref: '#/definitions/ValidationErrorModel'
+      details:
+        type: object
+        required:
+        - inBody
+        - inPath
+        properties:
+          inBody:
+            type: array
+            items:
+              $ref: '#/definitions/ValidationErrorModel'
+          inPath:
+            type: array
+            items:
+              $ref: '#/definitions/ValidationErrorModel'
 
   503_DB_ErrorModel:
     type: object
     required:
     - message
-    - body
+    - details
     properties:
       message:
         type: string
-      body:
+      details:
         $ref: '#/definitions/DynamoDbErrorModel'
 
 

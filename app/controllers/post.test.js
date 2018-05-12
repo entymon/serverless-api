@@ -1,7 +1,7 @@
 const request = require('supertest');
 const app = require('../server');
-const uuidv1 = require('uuid/v1');
-const db = require('../models/post');
+const client = require('../models/post');
+const db = require('../services/DynamoDB');
 
 const uuid = '7499d330-55e5-11e8-97e1-05025753431f';
 
@@ -28,7 +28,11 @@ describe('Add record to Post table', () => {
     }
   };
   beforeAll(() => {
-    db.updatePost(uuid, data);
+    db.describeTable('posts').then((data) => {
+      if (data.Table.ItemCount === 0) {
+        client.updatePost(uuid, data);
+      }
+    });
   });
 });
 

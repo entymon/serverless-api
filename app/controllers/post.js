@@ -24,9 +24,7 @@ const { DYNAMO_DB_ERROR, VALIDATION_ERROR } = require('../configs/constants');
  *      200:
  *        description: Returns all posts
  *        schema:
- *          type: object
- *          schema:
- *            $ref: "#/definitions/DynamoDBScan"
+ *          $ref: "#/definitions/DynamoDBScan"
  *      401:
  *        description: authorization error
  *        schema:
@@ -86,7 +84,10 @@ router.get('/:uuid', (req, res) => {
   } else {
     res.status(422).send({
       message: VALIDATION_ERROR,
-      body: validation.errors
+      details: {
+        inBody: [],
+        inPath: validation.errors,
+      }
     });
   }
 });
@@ -141,7 +142,10 @@ router.post('/', (req, res) => {
   } else {
     res.status(422).send({
       message: VALIDATION_ERROR,
-      body: validation.errors
+      details: {
+        inBody: validation.errors,
+        inPath: [],
+      }
     });
   }
 });
@@ -216,10 +220,12 @@ router.put('/:uuid', (req, res) => {
         });
       });
   } else {
-    const error = validBody.errors.concat(validParam.errors);
     res.status(422).send({
       message: VALIDATION_ERROR,
-      body: error
+      details: {
+        inBody: validBody.errors,
+        inPath: validParam.errors,
+      }
     });
   }
 });
@@ -237,6 +243,18 @@ router.put('/:uuid', (req, res) => {
  *        description: 'Identity of post'
  *        required: true
  *        type: 'string'
+ *      - in: 'body'
+ *        name: 'body'
+ *        description: 'Additional title key data must be presence for row delete'
+ *        required: true
+ *        schema:
+ *          type: object
+ *          required:
+ *            - title
+ *          properties:
+ *            title:
+ *              type: string
+ *
  *    responses:
  *      200:
  *        description: success - element was deleted
@@ -259,13 +277,17 @@ router.put('/:uuid', (req, res) => {
  */
 router.delete('/:uuid', (req, res) => {
 
-  const validation = validateParams(req, [
+  const validParam = validateParams(req, [
     presence('uuid'),
     isLength('uuid', { min: 34 }),
   ]);
 
-  if (validation.valid) {
-    deletePost(req.params.uuid)
+  const validBody = validateBody(req, [
+    presence('title')
+  ]);
+
+  if (validParam.valid && validBody.valid) {
+    deletePost(req.params.uuid, req.body.title)
       .then(() => res.json({}))
       .catch(error => {
         delete error[error.code];
@@ -277,7 +299,10 @@ router.delete('/:uuid', (req, res) => {
   } else {
     res.status(422).send({
       message: VALIDATION_ERROR,
-      body: validation.errors
+      details: {
+        inBody: validBody.errors,
+        inPath: validParam.errors,
+      }
     });
   }
 });
