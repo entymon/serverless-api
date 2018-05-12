@@ -79,10 +79,3 @@ describe('Tests endpoints: ANY /posts', () => {
   });
 
 });
-
-describe('Remove Post record from table', () => {
-  afterAll((done) => {
-    db.deletePost(uuid);
-    done();
-  });
-});

@@ -1,4 +1,5 @@
 const uuidv1 = require('uuid/v1');
+const moment = require('moment');
 const { documentClient: docClient } = require('../configs/awsConfig');
 
 const dbTable = 'posts';
@@ -9,7 +10,10 @@ const dbTable = 'posts';
  * @returns {Promise<any>}
  */
 module.exports.createPost = async (item) => {
+  const datetime = moment().toISOString();
   item.uuid = uuidv1();
+  item.updatedAt = datetime;
+  item.createdAt = datetime;
   const params = {
     TableName: dbTable,
     Item: item
@@ -34,6 +38,7 @@ module.exports.createPost = async (item) => {
  * @returns {Promise<void>}
  */
 module.exports.updatePost = async (uuid, item) => {
+  item.updatedAt = moment().toISOString();
   const params = {
     TableName: dbTable,
     Item: item,

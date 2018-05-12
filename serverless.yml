@@ -68,8 +68,8 @@ resources:
         - AttributeName: uuid
           KeyType: HASH
         ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
+          ReadCapacityUnits: 10
+          WriteCapacityUnits: 10
 
     PostsDynamoDBTable:
       Type: 'AWS::DynamoDB::Table'
@@ -78,12 +78,16 @@ resources:
         AttributeDefinitions:
         - AttributeName: uuid
           AttributeType: S
+        - AttributeName: title
+          AttributeType: S
         KeySchema:
         - AttributeName: uuid
           KeyType: HASH
+        - AttributeName: title
+          KeyType: RANGE
         ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
+          ReadCapacityUnits: 10
+          WriteCapacityUnits: 10
 
 plugins:
   - serverless-offline
