@@ -24,9 +24,9 @@ const { DYNAMO_DB_ERROR, VALIDATION_ERROR } = require('../configs/constants');
  *      200:
  *        description: Returns all posts
  *        schema:
- *          type: array
- *          items:
- *            $ref: "#/definitions/Post"
+ *          type: object
+ *          schema:
+ *            $ref: "#/definitions/DynamoDBScan"
  *      401:
  *        description: authorization error
  *        schema:
@@ -37,7 +37,10 @@ const { DYNAMO_DB_ERROR, VALIDATION_ERROR } = require('../configs/constants');
  *          $ref: '#/definitions/ErrorModel'
  */
 router.get('/', (req, res) => {
-  getAllPosts().then(data => res.status(200).json(data));
+  getAllPosts().then((data) => {
+    delete data.ScannedCount;
+    res.status(200).json(data);
+  });
 });
 
 /**

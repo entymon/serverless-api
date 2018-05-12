@@ -1,4 +1,15 @@
 definitions:
+
+  DynamoDBScan:
+    type: object
+    properties:
+      Items:
+        type: array
+        items:
+          $ref: '#/definitions/Post'
+      Count:
+        type: integer
+
   PostCreate:
     type: object
     required:
