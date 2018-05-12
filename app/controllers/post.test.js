@@ -1,5 +1,9 @@
 const request = require('supertest');
 const app = require('../server');
+const uuidv1 = require('uuid/v1');
+const db = require('../models/post');
+
+const uuid = '7499d330-55e5-11e8-97e1-05025753431f';
 
 describe('Test the root path', () => {
   test('It should response the GET method', () => {
@@ -7,16 +11,28 @@ describe('Test the root path', () => {
   });
 });
 
-// describe('Test the addLike method', () => {
-//   beforeAll(() => {
-//
-//   });
-//   afterAll((done) => {
-//
-//   });
-// });
+describe('Add record to Post table', () => {
 
-describe('Flow API', () => {
+  const data = {
+    categories: [
+      '324234cfefd',
+      'dfe21323we'
+    ],
+    title: 'Example of title',
+    excerpt: 'Excerpt example test',
+    uuid: uuid,
+    content: 'This is example content',
+    author: {
+      uuid: 'uuid',
+      username: 'test author'
+    }
+  };
+  beforeAll(() => {
+    db.updatePost(uuid, data);
+  });
+});
+
+describe('Tests endpoints: ANY /posts', () => {
 
   describe('GET /posts - get all posts', () => {
 
@@ -41,12 +57,10 @@ describe('Flow API', () => {
         .get('/posts')
         .expect(200)
         .then(res => {
-          if (res.body.Items.length !== 0) {
-            const sampleKeys = Object.keys(res.body.Items[0]);
-            expectedProps.forEach((key) => {
-              expect(sampleKeys.includes(key)).toBe(true);
-            });
-          }
+          const sampleKeys = Object.keys(res.body.Items[0]);
+          expectedProps.forEach((key) => {
+            expect(sampleKeys.includes(key)).toBe(true);
+          });
         });
     });
 
@@ -56,14 +70,19 @@ describe('Flow API', () => {
         .expect(200)
         .then(res => {
           const items = res.body.Items;
-          if (items.length !== 0) {
-            const extraProps = Object.keys(items[0]).filter((key) => {
-              return !expectedProps.includes(key);
-            });
-            expect(extraProps.length).toBe(0);
-          }
+          const extraProps = Object.keys(items[0]).filter((key) => {
+            return !expectedProps.includes(key);
+          });
+          expect(extraProps.length).toBe(0);
         });
     });
   });
 
+});
+
+describe('Remove Post record from table', () => {
+  afterAll((done) => {
+    db.deletePost(uuid);
+    done();
+  });
 });
