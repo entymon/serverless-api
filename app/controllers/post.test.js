@@ -110,6 +110,8 @@ describe('Tests endpoints: ANY /posts', () => {
 
   describe('GET /posts/:uuid ==> get post by uuid', () => {
 
+    const expectedProps = [ 'uuid', 'title', 'excerpt', 'content', 'author', 'categories', 'createdAt', 'updatedAt' ];
+
     it('should return with JSON for authentication error', () => {
       return request(app)
         .get('/posts')
@@ -148,7 +150,7 @@ describe('Tests endpoints: ANY /posts', () => {
         });
     });
 
-    it('respond for post found', (done) => {
+    it('should respond with post found with proper props', (done) => {
       return request(app)
         .get('/posts/7499d330-55e5-11e8-97e1-05025753431f')
         .set('Accept', 'application/json')
@@ -158,14 +160,10 @@ describe('Tests endpoints: ANY /posts', () => {
         .then(res => {
           expect(res.body).toHaveProperty('Item');
 
-          expect(res.body.Item).toHaveProperty('uuid');
-          expect(res.body.Item).toHaveProperty('title');
-          expect(res.body.Item).toHaveProperty('excerpt');
-          expect(res.body.Item).toHaveProperty('content');
-          expect(res.body.Item).toHaveProperty('author');
-          expect(res.body.Item).toHaveProperty('categories');
-          expect(res.body.Item).toHaveProperty('createdAt');
-          expect(res.body.Item).toHaveProperty('updatedAt');
+          const sampleKeys = Object.keys(res.body.Item);
+          expectedProps.forEach((key) => {
+            expect(sampleKeys.includes(key)).toBe(true);
+          });
           done();
         });
     });
