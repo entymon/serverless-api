@@ -45,8 +45,20 @@ describe('Tests endpoints: ANY /posts', () => {
 
     const expectedProps = [ 'uuid', 'title', 'excerpt', 'content', 'author', 'categories', 'createdAt', 'updatedAt' ];
 
+    it('should return with JSON for authentication error', () => {
+      return request(app)
+        .get('/posts')
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .expect(401)
+        .then(res => {
+
+          expect(res.body).toHaveProperty('details');
+          expect(res.body).toHaveProperty('body');
+        });
+    });
+
     it('should return JSON array', () => {
-      console.log(accessToken, 'accessToken');
       return request(app)
         .get('/posts')
         .set('Accept', 'application/json')
