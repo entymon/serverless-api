@@ -1,4 +1,6 @@
 const request = require('supertest');
+const assert = require('assert');
+const _ = require('lodash');
 
 process.env.COGNITO_AUTHORIZATION = 1;
 
@@ -29,7 +31,7 @@ describe('Add record to Post table', () => {
     createdAt: '2018-05-12T16:06:45.784Z'
   };
   beforeAll( async (done) => {
-    client.updatePost(uuid, data);
+    await client.updatePost(uuid, data);
     const tokens = await cognito.signIn(
       process.env.DEMO_USERNAME,
       process.env.DEMO_PASSWORD
@@ -52,9 +54,8 @@ describe('Tests endpoints: ANY /posts', () => {
         .expect('Content-Type', /json/)
         .expect(401)
         .then(res => {
-
+          expect(res.body).toHaveProperty('message');
           expect(res.body).toHaveProperty('details');
-          expect(res.body).toHaveProperty('body');
         });
     });
 
@@ -109,6 +110,18 @@ describe('Tests endpoints: ANY /posts', () => {
 
   describe('GET /posts/:uuid ==> get post by uuid', () => {
 
+    it('should return with JSON for authentication error', () => {
+      return request(app)
+        .get('/posts')
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .expect(401)
+        .then(res => {
+          expect(res.body).toHaveProperty('message');
+          expect(res.body).toHaveProperty('details');
+        });
+    });
+
     it('respond for not allowed length of query parameter', (done) => {
       return request(app)
         .get('/posts/not-valid-uuid')
@@ -116,9 +129,8 @@ describe('Tests endpoints: ANY /posts', () => {
         .set('accesstoken', accessToken)
         .expect('Content-Type', /json/)
         .expect(422)
-        .end((err) => {
-          if (err) return done(err);
-          done();
+        .end((err, result) => {
+          done(err);
         });
     });
 
@@ -129,8 +141,31 @@ describe('Tests endpoints: ANY /posts', () => {
         .set('accesstoken', accessToken)
         .expect('Content-Type', /json/)
         .expect(404)
-        .end((err) => {
-          if (err) return done(err);
+        .end((err, result) => {
+          assert.equal(result.body.message, 'empty content');
+          assert.equal(_.isEmpty(result.body.details), true);
+          done(err);
+        });
+    });
+
+    it('respond for post found', (done) => {
+      return request(app)
+        .get('/posts/7499d330-55e5-11e8-97e1-05025753431f')
+        .set('Accept', 'application/json')
+        .set('accesstoken', accessToken)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .then(res => {
+          expect(res.body).toHaveProperty('Item');
+
+          expect(res.body.Item).toHaveProperty('uuid');
+          expect(res.body.Item).toHaveProperty('title');
+          expect(res.body.Item).toHaveProperty('excerpt');
+          expect(res.body.Item).toHaveProperty('content');
+          expect(res.body.Item).toHaveProperty('author');
+          expect(res.body.Item).toHaveProperty('categories');
+          expect(res.body.Item).toHaveProperty('createdAt');
+          expect(res.body.Item).toHaveProperty('updatedAt');
           done();
         });
     });
@@ -140,4 +175,12 @@ describe('Tests endpoints: ANY /posts', () => {
 
   });
 
+});
+
+describe('Add record to Post table', () => {
+
+  afterAll( async (done) => {
+    await client.deletePost(uuid);
+    done();
+  });
 });

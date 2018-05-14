@@ -13,8 +13,8 @@ module.exports = (req, res, next) => {
 
   if (!accessTokenFromClient) {
     return res.status(401).json({
-      details: 'access token missing from header',
-      body: {}
+      message: 'access token missing from header',
+      details: {}
     });
   }
 
