@@ -149,4 +149,44 @@ module.exports.adminCreateUser =
     });
   };
 
+/**
+ * Authorize user and get tokens
+ * @param username
+ * @param password
+ * @returns {Promise<any>}
+ */
+module.exports.signIn = (username, password) => {
+  // AWS.config.credentials.get();
+  const authenticationData = {
+    Username: username,
+    Password: password,
+  };
+  const authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails(authenticationData);
+  const poolData = {
+    UserPoolId: process.env.COGNITO_USER_POOL_ID,
+    ClientId: process.env.COGNITO_USER_POOL_CLIENT_ID
+  };
+  const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+  const userData = {
+    Username: username,
+    Pool: userPool
+  };
+  const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
+
+  return new Promise((resolve, reject) => {
+    cognitoUser.authenticateUser(authenticationDetails, {
+      onSuccess: function (result) {
+        resolve({
+          idToken: result.getIdToken().getJwtToken(),
+          refreshToken: result.getRefreshToken().getToken(),
+          accessToken: result.getAccessToken().getJwtToken(),
+        });
+      },
+      onFailure: function(err) {
+        reject(err);
+      },
+    });
+  });
+};
+
 

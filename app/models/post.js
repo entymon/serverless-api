@@ -106,12 +106,11 @@ module.exports.getPostByUuid = async (uuid) => {
  * @param uuid
  * @returns {Promise<void>}
  */
-module.exports.deletePost = async (uuid, title) => {
+module.exports.deletePost = async (uuid) => {
   const params = {
     TableName: dbTable,
     Key: {
-      uuid: uuid,
-      title: title
+      uuid: uuid
     }
   };
 

@@ -1,11 +1,11 @@
 require('dotenv').config();
 const AWS = require('aws-sdk');
 
-const IS_OFFLINE = process.env.IS_OFFLINE;
+const IS_OFFLINE = parseInt(process.env.IS_OFFLINE);
 const USERS_TABLE = process.env.USERS_TABLE;
 
 let dynamoDb;
-if (IS_OFFLINE === 'true') {
+if (IS_OFFLINE) {
   dynamoDb = new AWS.DynamoDB.DocumentClient({
     region: 'localhost',
     endpoint: 'http://localhost:8000'

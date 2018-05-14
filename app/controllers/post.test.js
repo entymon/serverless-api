@@ -1,9 +1,15 @@
 const request = require('supertest');
+
+process.env.COGNITO_AUTHORIZATION = 1;
+
 const app = require('../server');
 const client = require('../models/post');
 const db = require('../services/DynamoDB');
+global.fetch = require('node-fetch');
+const cognito = require('../services/CognitoIdentity');
 
 const uuid = '7499d330-55e5-11e8-97e1-05025753431f';
+let accessToken = '';
 
 describe('Add record to Post table', () => {
 
@@ -22,20 +28,30 @@ describe('Add record to Post table', () => {
     },
     createdAt: '2018-05-12T16:06:45.784Z'
   };
-  beforeAll(() => {
+  beforeAll( async (done) => {
     client.updatePost(uuid, data);
+    const tokens = await cognito.signIn(
+      process.env.DEMO_USERNAME,
+      process.env.DEMO_PASSWORD
+    );
+    accessToken = tokens.accessToken;
+    done();
   });
 });
 
 describe('Tests endpoints: ANY /posts', () => {
 
-  describe('GET /posts - get all posts', () => {
+  describe('GET /posts ==> get all posts', () => {
 
     const expectedProps = [ 'uuid', 'title', 'excerpt', 'content', 'author', 'categories', 'createdAt', 'updatedAt' ];
 
     it('should return JSON array', () => {
+      console.log(accessToken, 'accessToken');
       return request(app)
         .get('/posts')
+        .set('Accept', 'application/json')
+        .set('accesstoken', accessToken)
+        .expect('Content-Type', /json/)
         .expect(200)
         .then(res => {
 
@@ -50,6 +66,9 @@ describe('Tests endpoints: ANY /posts', () => {
     it('should return objects with correct props', () => {
       return request(app)
         .get('/posts')
+        .set('Accept', 'application/json')
+        .set('accesstoken', accessToken)
+        .expect('Content-Type', /json/)
         .expect(200)
         .then(res => {
           const sampleKeys = Object.keys(res.body.Items[0]);
@@ -62,6 +81,9 @@ describe('Tests endpoints: ANY /posts', () => {
     it('shouldn\'t return objects with extra props', () => {
       return request(app)
         .get('/posts')
+        .set('Accept', 'application/json')
+        .set('accesstoken', accessToken)
+        .expect('Content-Type', /json/)
         .expect(200)
         .then(res => {
           const items = res.body.Items;
@@ -71,6 +93,39 @@ describe('Tests endpoints: ANY /posts', () => {
           expect(extraProps.length).toBe(0);
         });
     });
+  });
+
+  describe('GET /posts/:uuid ==> get post by uuid', () => {
+
+    it('respond for not allowed length of query parameter', (done) => {
+      return request(app)
+        .get('/posts/not-valid-uuid')
+        .set('Accept', 'application/json')
+        .set('accesstoken', accessToken)
+        .expect('Content-Type', /json/)
+        .expect(422)
+        .end((err) => {
+          if (err) return done(err);
+          done();
+        });
+    });
+
+    it('respond for post not found', (done) => {
+      return request(app)
+        .get('/posts/50398b30-56e8-11e8-b897-d5b46d8bxxxx')
+        .set('Accept', 'application/json')
+        .set('accesstoken', accessToken)
+        .expect('Content-Type', /json/)
+        .expect(404)
+        .end((err) => {
+          if (err) return done(err);
+          done();
+        });
+    });
+  });
+
+  describe('POST /posts ==> create ne post', () => {
+
   });
 
 });

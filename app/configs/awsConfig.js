@@ -27,7 +27,7 @@ module.exports.cognitoConfig = {
  * DynamoDB Configuration
  */
 let dynamoDBConfig;
-if (process.env.IS_OFFLINE === 'true') {
+if (parseInt(process.env.IS_OFFLINE)) {
   dynamoDBConfig = {
     region: 'localhost',
     endpoint: 'http://localhost:8000',

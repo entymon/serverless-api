@@ -71,6 +71,7 @@ I used syntax `tableName: 'users-table-${self:provider.stage}'` - serverless com
 1. [ ] add functional tests
 2. [ ] add unit tests
 3. [ ] deploy code to production server
+4. [ ] resolve problem with non authenticated access to enpoint for unit tests
 
 
 

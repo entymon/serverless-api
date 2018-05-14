@@ -22,20 +22,19 @@ const swaggerSpec = swaggerJSDoc({
 
 const router = express.Router();
 
+
 router.get('/', function (req, res) {
   res.send('Hello World!');
 });
 
-const { describeTable } = require('../services/DynamoDB');
+const { signIn } = require('../services/CognitoIdentity');
 router.get('/test', function (req, res) {
-  describeTable('posts')
+  signIn('demo', 'Admin@2018')
     .then(data => res.json(data))
-    .catch(error => {
-      res.json(error);
-    });
+    .catch(error => res.json(error));
 });
 
-if (process.env.COGNITO_AUTHORIZATION === true) {
+if (parseInt(process.env.COGNITO_AUTHORIZATION)) {
   router.use(cognitoAuth);
 }
 

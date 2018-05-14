@@ -4,6 +4,7 @@ const {
   validateParams, isLength
 } = require('property-validator');
 const router = express.Router();
+const _ = require('lodash');
 const {
   createPost,
   getPostByUuid,
@@ -73,20 +74,30 @@ router.get('/', (req, res) => {
  *          $ref: '#/definitions/ErrorModel'
  */
 router.get('/:uuid', (req, res) => {
-  const validation = validateParams(req, [
+  const validParam = validateParams(req, [
     presence('uuid'),
     isLength('uuid', { min: 34 }),
   ]);
 
-  if (validation.valid) {
+  if (validParam.valid) {
     getPostByUuid(req.params.uuid)
-      .then(data => res.status(200).json(data));
+      .then(data => {
+
+        if (_.isEmpty(data)) {
+          res.status(404).json({
+            message: 'empty content',
+            details: []
+          });
+        } else {
+          res.status(200).json(data);
+        }
+      });
   } else {
     res.status(422).send({
       message: VALIDATION_ERROR,
       details: {
         inBody: [],
-        inPath: validation.errors,
+        inPath: validParam.errors,
       }
     });
   }
@@ -243,18 +254,6 @@ router.put('/:uuid', (req, res) => {
  *        description: 'Identity of post'
  *        required: true
  *        type: 'string'
- *      - in: 'body'
- *        name: 'body'
- *        description: 'Additional title key data must be presence for row delete'
- *        required: true
- *        schema:
- *          type: object
- *          required:
- *            - title
- *          properties:
- *            title:
- *              type: string
- *
  *    responses:
  *      200:
  *        description: success - element was deleted
@@ -282,11 +281,7 @@ router.delete('/:uuid', (req, res) => {
     isLength('uuid', { min: 34 }),
   ]);
 
-  const validBody = validateBody(req, [
-    presence('title')
-  ]);
-
-  if (validParam.valid && validBody.valid) {
+  if (validParam.valid) {
     deletePost(req.params.uuid, req.body.title)
       .then(() => res.json({}))
       .catch(error => {
@@ -300,7 +295,7 @@ router.delete('/:uuid', (req, res) => {
     res.status(422).send({
       message: VALIDATION_ERROR,
       details: {
-        inBody: validBody.errors,
+        inBody: [],
         inPath: validParam.errors,
       }
     });

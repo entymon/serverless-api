@@ -1,7 +1,7 @@
 const AWS = require('aws-sdk');
 const config = new AWS.Config();
 
-if (process.env.IS_OFFLINE) {
+if (parseInt(process.env.IS_OFFLINE)) {
   config.update({
     region: 'localhost',
     endpoint: 'http://localhost:8000',
