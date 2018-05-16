@@ -1,5 +1,6 @@
 const uuidv1 = require('uuid/v1');
 const moment = require('moment');
+const _ = require('lodash');
 const { documentClient: docClient } = require('../configs/awsConfig');
 
 const dbTable = 'posts';
@@ -38,22 +39,27 @@ module.exports.createPost = async (item) => {
  * @returns {Promise<void>}
  */
 module.exports.updatePost = async (uuid, item) => {
-  item.updatedAt = moment().toISOString();
-  const params = {
-    TableName: dbTable,
-    Item: item,
-    ReturnValues: 'ALL_OLD'
-  };
 
-  return new Promise((resolve, reject) => {
-    docClient.put(params, function(err, data) {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(data);
-      }
+  const data = this.getPostByUuid(uuid);
+  if (_.isEmpty(data)) {
+    return Promise.resolve(data);
+  } else {
+    item.updatedAt = moment().toISOString();
+    const params = {
+      TableName: dbTable,
+      Item: item,
+      ReturnValues: 'ALL_OLD'
+    };
+    return new Promise((resolve, reject) => {
+      docClient.put(params, function(err, data) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
     });
-  });
+  }
 };
 
 /**
@@ -66,9 +72,8 @@ module.exports.getAllPosts = async () => {
   };
 
   return new Promise((resolve, reject) => {
-    docClient.scan(params, function (err, data) {
+    docClient.scan(params, (err, data) => {
       if (err) {
-        console.log(err);
         reject(err);
       } else {
         resolve(data);

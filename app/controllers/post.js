@@ -82,7 +82,6 @@ router.get('/:uuid', (req, res) => {
   if (validParam.valid) {
     getPostByUuid(req.params.uuid)
       .then(data => {
-
         if (_.isEmpty(data)) {
           res.status(404).json({
             message: 'empty content',
@@ -219,13 +218,18 @@ router.put('/:uuid', (req, res) => {
 
   if (validBody.valid && validParam.valid) {
     updatePost(req.params.uuid, req.body)
-      .then(() => {
-        res.status(200)
-          .json(req.body);
+      .then((data) => {
+        if (_.isEmpty(data)) {
+          res.status(404).json({
+            message: 'empty content',
+            details: []
+          });
+        } else {
+          res.status(200).json(req.body);
+        }
       })
       .catch(error => {
-        delete error[error.code];
-        res.status(200).json({
+        res.status(500).json({
           message: DYNAMO_DB_ERROR,
           body: error
         });

@@ -173,6 +173,10 @@ describe('Tests endpoints: ANY /posts', () => {
 
   });
 
+  describe('PUT /posts/:uuid ==> create ne post', () => {
+
+  });
+
 });
 
 describe('Add record to Post table', () => {
